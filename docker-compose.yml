@@ -1,19 +1,25 @@
 version: '3.8' 
  
 services:
- angular:
-  build: client
-  ports:
-  - "4200:4200"
+    angular-client:
+        build: ./client
+        ports:
+            - "80:4200"
  
- express:
-  build: server
-  ports:
-  - "3000:3000" 
-  links:
-  - database
+    express-server:
+        build: ./server
+        ports:
+            - "8080:8080" 
+        environment:
+            - MONGO_URL=mongodb://database/anotherplanningtool
+        links:
+            - mongo-database
+        depends_on:
+            - mongo-database
  
- database:
-  image: mongo
-  ports:
-  - "27017:27017"
+    mongo-database:
+        image: mongo
+        volumes:
+            - "/data/db:/data/db"
+        ports:
+            - "27017:27017"

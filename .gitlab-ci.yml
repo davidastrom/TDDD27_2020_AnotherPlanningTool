@@ -1,0 +1,19 @@
+stages:
+    - build
+    - test
+    - deploy
+
+image: docker/compose:latest
+
+services:
+    - docker:dind
+
+cache:
+    paths:
+        - node_modules/
+
+build:
+    stage: build
+    script:
+        - docker-compose build
+        - docker-compose up -d
