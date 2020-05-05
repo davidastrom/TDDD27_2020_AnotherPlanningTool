@@ -8,9 +8,8 @@ image: docker/compose:latest
 services:
     - docker:dind
 
-cache:
-    paths:
-        - node_modules/
+before_script:
+    - docker info
 
 build:
     stage: build
