@@ -3,10 +3,13 @@ stages:
     - test
     - deploy
 
-image: docker:latest
+variables:
+    DOCKER_HOST: tcp://docker:2375
+
+image: docker:stable
 
 services:
-    - docker:latest-dind
+    - docker:dind
 
 before_script:
     - docker login -u $DOCKER_USER -p $DOCKER_KEY
@@ -17,4 +20,3 @@ build:
     script:
         - docker-compose build
         - docker-compose up -d
-    
