@@ -5,12 +5,16 @@ stages:
       
 image: docker:18.09
 
+variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+
+
 services:
     - docker:18.09-dind
 
 before_script:
+    - docker info
     - docker login -u $DOCKER_USER -p $DOCKER_KEY
-    - sudo docker info
     - apk add python python-dev py-pip libffi-dev openssl-dev gcc libc-dev make
     - pip install docker-compose
 
