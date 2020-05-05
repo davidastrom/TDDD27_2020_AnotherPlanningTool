@@ -3,10 +3,10 @@ stages:
     - test
     - deploy
 
-image: docker:stable
+image: docker:latest
 
 services:
-    - docker:dind
+    - docker:latest-dind
 
 before_script:
     - docker login -u $DOCKER_USER -p $DOCKER_KEY
@@ -17,3 +17,4 @@ build:
     script:
         - docker-compose build
         - docker-compose up -d
+    
