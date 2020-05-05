@@ -9,7 +9,7 @@ services:
     - docker:dind
 
 before_script:
-    - docker login -u $DOCKER_USER -p $DOCKER_KEY
+    - docker login -u "$DOCKER_USER" -p "$DOCKER_KEY"
     - docker info
 
 build:
