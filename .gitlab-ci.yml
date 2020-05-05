@@ -14,6 +14,7 @@ build:
     stage: build
     script:
         - docker login -u $DOCKER_USER -p $DOCKER_KEY
-        - docker build -t client ./client
+        - cd client
+        - docker build -t client .
         - docker-compose build
         - docker-compose up -d
