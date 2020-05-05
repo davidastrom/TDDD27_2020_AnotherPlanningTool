@@ -17,6 +17,5 @@ before_script:
 build:
     stage: build
     script:
-        - 
         - docker-compose build
         - docker-compose up -d
