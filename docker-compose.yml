@@ -1,10 +1,12 @@
 version: '3.8' 
- 
+
 services:
     angular-client:
         build: ./client
         ports:
-            - "80:4200"
+            - "4200:4200"
+        volumes:
+            - ./client/src:/usr/src/app/src
  
     express-server:
         build: ./server
