@@ -2,14 +2,11 @@ stages:
     - build
     - test
     - deploy
-
-variables:
-    DOCKER_HOST: http+docker://localhost:2375
       
 image: docker:stable
 
 services:
-    - docker:dind
+    - docker:18.09-dind
 
 before_script:
     - docker login -u $DOCKER_USER -p $DOCKER_KEY
