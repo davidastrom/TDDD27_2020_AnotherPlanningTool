@@ -3,13 +3,14 @@ stages:
     - test
     - deploy
       
-image: docker:stable
+image: docker:18.09
 
 services:
     - docker:18.09-dind
 
 before_script:
     - docker login -u $DOCKER_USER -p $DOCKER_KEY
+    - docker info
     - apk add python python-dev py-pip libffi-dev openssl-dev gcc libc-dev make
     - pip install docker-compose
 
