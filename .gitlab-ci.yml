@@ -10,6 +10,7 @@ services:
 
 before_script:
     - docker login -u $DOCKER_USER -p $DOCKER_KEY
+    - echo $DOCKER_HOST
     - docker info
     - apk add python python-dev py-pip libffi-dev openssl-dev gcc libc-dev make
     - pip install docker-compose
