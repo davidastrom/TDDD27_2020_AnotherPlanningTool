@@ -10,10 +10,13 @@ services:
 
 before_script:
     - docker login -u $DOCKER_USER -p $DOCKER_KEY
-    - docker info
+    - apk add python python-dev py-pip build-base
+    - pip install docker-compose
+
 
 build:
     stage: build
     script:
+        - 
         - docker-compose build
         - docker-compose up -d
