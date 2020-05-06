@@ -2,9 +2,11 @@
   "name": "server",
   "version": "1.0.0",
   "description": "A Trello-like planning tool made as a part of the course TDDD27 Advanced Web Programming at Linköping University",
-  "main": "index.js",
+  "main": "src/server.ts",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "start:dev": "npm run build:dev",
+    "build:dev": "tsc && concurrently \"tsc -w\" \"nodemon dist/server.js\""
   },
   "repository": {
     "type": "git",
@@ -18,14 +20,30 @@
   "homepage": "https://github.com/Qnott/TDDD27_2020_AnotherPlanningTool#readme",
   "dependencies": {
     "@typegoose/typegoose": "^7.0.0",
-    "@types/express": "^4.17.6",
     "apollo-server-express": "^2.13.0",
     "class-validator": "^0.12.2",
+    "compression": "^1.7.4",
+    "concurrently": "^5.2.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "graphql": "^15.0.0",
+    "http": "0.0.1-security",
     "mongoose": "^5.9.12",
+    "ncp": "^2.0.0",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "^1.0.0-rc.1",
+    "type-graphql": "^1.0.0-rc.1"
+  },
+  "devDependencies": {
+    "@types/compression": "^1.7.0",
+    "@types/express": "^4.17.6",
+    "@types/graphql-depth-limit": "^1.1.2",
+    "@types/mongoose": "^5.7.15",
+    "@types/node": "^13.13.4",
+    "graphql-depth-limit": "^1.1.0",
+    "graphql-import": "^1.0.2",
+    "graphql-import-node": "0.0.4",
+    "nodemon": "^2.0.3",
+    "ts-node": "^8.10.1",
     "typescript": "^3.8.3"
   }
 }
