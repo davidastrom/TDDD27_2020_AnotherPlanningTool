@@ -6,25 +6,25 @@ import {
 } from '@typegoose/typegoose';
 import { Ref } from '../types';
 
+import { Team } from './Team';
 import { User } from './User';
-import { Board } from './Board';
 
-@ObjectType({ description: 'The Team model' })
-export class Team {
+@ObjectType({ description: 'The Board model' })
+export class Board {
 	@Field((_type) => ID)
 	readonly id!: String;
 
 	@Field()
-	@Property({ required: true })
+	@Property({ required: true, unique: true })
 	name!: String;
+
+	@Field((_type) => Team, { nullable: true })
+	@Property({ ref: Team })
+	team?: Ref<Team>;
 
 	@Field((_type) => [User])
 	@ArrayProperty({ items: User, default: [] })
-	members!: User[];
-
-	@Field((_type) => [Board])
-	@ArrayProperty({ items: Board, default: [] })
-	boards!: Board[];
+	members?: User[];
 }
 
-export const TeamModel = getModelForClass(Team);
+export const BoardModel = getModelForClass(Board);

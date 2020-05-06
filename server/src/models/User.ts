@@ -4,8 +4,10 @@ import {
 	arrayProp as ArrayProperty,
 	getModelForClass,
 } from '@typegoose/typegoose';
+import { Ref } from '../types';
 
 import { Team } from './Team';
+import { Board } from './Board';
 
 @ObjectType({ description: 'The User model' })
 export class User {
@@ -19,6 +21,10 @@ export class User {
 	@Field((_type) => [Team])
 	@ArrayProperty({ items: Team, default: [] })
 	teams!: Team[];
+
+	@Field((_type) => [Board])
+	@ArrayProperty({ items: Board, default: [] })
+	boards!: Board[];
 }
 
 export const UserModel = getModelForClass(User);
