@@ -17,9 +17,9 @@ const main = async () => {
 		environment.mongo.url,
 		environment.mongo.options,
 	);
-	mongoose.connection.on('error', function(err) {
+	mongoose.connection.on('error', function (err) {
 		console.error('MongoDB connection error: ' + err);
-	   });
+	});
 
 	const server = new ApolloServer({ schema });
 	const app = Express();
