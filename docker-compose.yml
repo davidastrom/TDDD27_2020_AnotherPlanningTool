@@ -16,9 +16,9 @@ services:
             - "8080:8080" 
         command: npm run start:dev
         volumes:
-            - ./server/src:/user/src/app/src
+            - ./server/src:/usr/src/app/src
         environment:
-            - MONGO_URL=mongodb://mongo-database/anotherplanningtool
+            - MONGO_URL=mongodb://mongo-database:27017/anotherplanningtool
         links:
             - mongo-database
         depends_on:

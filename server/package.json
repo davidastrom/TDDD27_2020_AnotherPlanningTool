@@ -6,7 +6,7 @@
   "scripts": {
     "test": "test",
     "start:dev": "npm run build:dev",
-    "build:dev": "nodemon 'src/server.ts' --exec 'ts-node' src/server.ts -e ts,graphql"
+    "build:dev": "tsc && concurrently \"tsc -w\" \"nodemon dist/server.js\""
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
     "apollo-server-express": "^2.13.0",
     "class-validator": "^0.12.2",
     "compression": "^1.7.4",
+    "concurrently": "^5.2.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "graphql": "^15.0.0",
