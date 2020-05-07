@@ -11,20 +11,20 @@ import { User } from './User';
 
 @ObjectType({ description: 'The Board model' })
 export class Board {
-	@Field((_type) => ID)
+	@Field((type) => ID)
 	readonly id!: String;
 
 	@Field()
-	@Property({ required: true, unique: true })
+	@Property({ required: true })
 	name!: String;
 
-	@Field((_type) => Team, { nullable: true })
-	@Property({ ref: Team })
+	@Field((type) => Team, { nullable: true })
+	@Property({ ref: 'Team' })
 	team?: Ref<Team>;
 
-	@Field((_type) => [User])
-	@ArrayProperty({ items: User, default: [] })
-	members?: User[];
+	@Field((type) => [User])
+	@ArrayProperty({ ref: 'User' })
+	members?: Ref<User>[];
 }
 
 export const BoardModel = getModelForClass(Board);
