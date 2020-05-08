@@ -4,13 +4,22 @@ import { buildSchema } from 'type-graphql';
 import { connect, mongo } from 'mongoose';
 import { environment } from './environments/environment';
 
-import { UserResolver } from './resolvers/UserResolver';
+import { UserResolver } from './resolvers/user-resolver';
+import { BoardResolver } from './resolvers/board-resolver';
+import { ListResolver } from './resolvers/list-resolver';
+import { TeamResolver } from './resolvers/team-resolver';
+import { TaskResolver } from './resolvers/task-resolver';
 
 const main = async () => {
 	const schema = await buildSchema({
-		resolvers: [UserResolver],
+		resolvers: [
+			UserResolver,
+			BoardResolver,
+			ListResolver,
+			TeamResolver,
+			TaskResolver,
+		],
 		emitSchemaFile: true,
-		validate: false,
 	});
 
 	const mongoose = await connect(
