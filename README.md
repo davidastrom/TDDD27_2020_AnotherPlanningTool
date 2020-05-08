@@ -2,6 +2,10 @@
 
 A Trello-like planning tool made as a part of the course TDDD27 Advanced Web Programming at Linköping University
 
+## Midterm Screencast link
+
+https://liuonline-my.sharepoint.com/:v:/g/personal/davas593_student_liu_se/EdfC2O7nvPJGp8ufhn8MUlgBGCoSCi5nZWrz0F9WdTv7MA?e=RjbG12
+
 ## Functional Specifications
 
 The app will be a project planning tool for teams. The main feature will be a kanban-board similar to Trello. The user will be able to log in with google account, create teams with others, and create projects, either personal or in teams.
