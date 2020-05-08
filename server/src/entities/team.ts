@@ -4,15 +4,17 @@ import {
 	arrayProp as ArrayProperty,
 	getModelForClass,
 } from '@typegoose/typegoose';
+import { ObjectId } from 'mongodb';
+
 import { Ref } from '../types';
 
-import { User } from './User';
-import { Board } from './Board';
+import { User } from './user';
+import { Board } from './board';
 
 @ObjectType({ description: 'The Team model' })
 export class Team {
 	@Field((type) => ID)
-	readonly id!: String;
+	readonly _id!: ObjectId;
 
 	@Field()
 	@Property({ required: true })
@@ -25,6 +27,8 @@ export class Team {
 	@Field((type) => [Board])
 	@ArrayProperty({ ref: 'Board' })
 	boards!: Ref<Board>[];
+
+	_doc: any;
 }
 
 export const TeamModel = getModelForClass(Team);
