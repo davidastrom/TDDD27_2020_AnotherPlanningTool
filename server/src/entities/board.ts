@@ -19,7 +19,7 @@ export class Board {
 
 	@Field()
 	@Property({ required: true })
-	name!: String;
+	name!: string;
 
 	@Field((type) => Team, { nullable: true })
 	@Property({ ref: 'Team' })

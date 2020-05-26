@@ -17,11 +17,11 @@ export class Task {
 
 	@Field()
 	@Property({ required: true })
-	title!: String;
+	title!: string;
 
 	@Field({ nullable: true })
 	@Property()
-	description?: String;
+	description?: string;
 
 	@Field((type) => [User])
 	@ArrayProperty({ ref: 'User' })

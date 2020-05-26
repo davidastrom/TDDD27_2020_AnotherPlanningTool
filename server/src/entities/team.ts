@@ -18,7 +18,7 @@ export class Team {
 
 	@Field()
 	@Property({ required: true })
-	name!: String;
+	name!: string;
 
 	@Field((type) => [User])
 	@ArrayProperty({ ref: 'User' })

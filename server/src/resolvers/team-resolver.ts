@@ -29,43 +29,42 @@ export class TeamResolver {
 	}
 
 	@Mutation(() => Team)
-	async createTeam(@Arg('data') { name }: TeamInput): Promise<Team> {
-		const Team = (
-			await TeamModel.create({
-				name,
-			})
-		).save();
-		return Team;
+	async createTeam(@Arg('data') teamInput: TeamInput): Promise<Team> {
+		const team = new TeamModel({
+			...teamInput,
+		});
+		await team.save();
+		return team;
 	}
 
 	@Mutation(() => Team)
 	async addTeamMember(
 		@Arg('teamId', (type) => ObjectIdScalar) teamId: ObjectId,
-		@Arg('userId', (type) => ObjectIdScalar) userId: ObjectId,
+		@Arg('userId', (type) => ObjectIdScalar) userId: ObjectId
 	) {
-		const Team = await TeamModel.findById(teamId);
-		if (!Team) {
+		const team = await TeamModel.findById(teamId);
+		if (!team) {
 			throw new Error('Invalid Team ID');
 		}
 
-		const User = await UserModel.findById(userId);
-		if (!User) {
+		const user = await UserModel.findById(userId);
+		if (!user) {
 			throw new Error('Invalid User ID');
 		}
 
 		let userInMember: boolean = false;
 		let teamInTeams: boolean = false;
 
-		for (let id of Team.members) {
-			if (id.toString() == User._id.toString()) {
+		for (let id of team.members) {
+			if (id.toString() == user._id.toString()) {
 				userInMember = true;
 			}
 		}
 		if (!userInMember) {
-			Team.members.push(User._id);
-			User.teams.push(Team._id);
-			await Team.save();
-			await User.save();
+			team.members.push(user._id);
+			user.teams.push(team._id);
+			await team.save();
+			await user.save();
 		}
 
 		return Team;
@@ -74,33 +73,33 @@ export class TeamResolver {
 	@Mutation(() => Team)
 	async removeTeamMember(
 		@Arg('teamId', (type) => ObjectIdScalar) teamId: ObjectId,
-		@Arg('userId', (type) => ObjectIdScalar) userId: ObjectId,
+		@Arg('userId', (type) => ObjectIdScalar) userId: ObjectId
 	) {
-		const Team = await TeamModel.findById(teamId);
-		if (!Team) {
+		const team = await TeamModel.findById(teamId);
+		if (!team) {
 			throw new Error('Invalid Team ID');
 		}
 
-		const User = await UserModel.findById(userId);
-		if (!User) {
+		const user = await UserModel.findById(userId);
+		if (!user) {
 			throw new Error('Invalid User ID');
 		}
 
-		for (let i = 0; i < Team.members.length; i++) {
-			if (Team.members[i].toString() == User._id.toString()) {
-				Team.members.splice(i, 1);
-				await Team.save();
+		for (let i = 0; i < team.members.length; i++) {
+			if (team.members[i].toString() == user._id.toString()) {
+				team.members.splice(i, 1);
+				await team.save();
 				break;
 			}
 		}
-		for (let i = 0; i < User.teams.length; i++) {
-			if (User.teams[i].toString() == Team._id.toString()) {
-				User.teams.splice(i, 1);
-				await User.save();
+		for (let i = 0; i < user.teams.length; i++) {
+			if (user.teams[i].toString() == team._id.toString()) {
+				user.teams.splice(i, 1);
+				await user.save();
 				break;
 			}
 		}
-		return Team;
+		return team;
 	}
 
 	@FieldResolver()

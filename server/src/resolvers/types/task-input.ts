@@ -7,11 +7,11 @@ import { Task } from '../../entities/task';
 export class TaskInput implements Partial<Task> {
 	@Field()
 	@Length(1, 127)
-	title!: String;
+	title!: string;
 
 	@Field({ nullable: true })
 	@MaxLength(255)
-	description?: String;
+	description?: string;
 
 	@Field((type) => ID)
 	listId!: ObjectId;

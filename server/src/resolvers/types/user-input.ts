@@ -6,5 +6,5 @@ import { User } from '../../entities/user';
 export class UserInput implements Partial<User> {
 	@Field()
 	@IsEmail()
-	email!: String;
+	email!: string;
 }
