@@ -12,7 +12,7 @@ import { Task } from './task';
 
 @ObjectType({ description: 'The List model. Submodel for Board' })
 export class List {
-	@Field((type) => ID, { nullable: true })
+	@Field((type) => ID)
 	readonly _id!: ObjectId;
 
 	@Field()

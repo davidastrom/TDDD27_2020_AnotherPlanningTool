@@ -14,7 +14,7 @@ import { List } from './list';
 
 @ObjectType({ description: 'The Board model' })
 export class Board {
-	@Field()
+	@Field((type) => ID)
 	readonly _id!: ObjectId;
 
 	@Field()
