@@ -7,7 +7,7 @@ import { List } from '../../entities/list';
 export class ListInput implements Partial<List> {
 	@Field()
 	@Length(1, 127)
-	name!: String;
+	name!: string;
 
 	@Field((type) => ID)
 	boardId!: ObjectId;

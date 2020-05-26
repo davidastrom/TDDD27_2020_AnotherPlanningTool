@@ -18,7 +18,7 @@ export class User {
 
 	@Field()
 	@Property({ required: true, unique: true })
-	email!: String;
+	email!: string;
 
 	@Field((type) => [Team])
 	@ArrayProperty({ ref: 'Team' })

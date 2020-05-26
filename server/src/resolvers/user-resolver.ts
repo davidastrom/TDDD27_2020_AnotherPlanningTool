@@ -33,7 +33,8 @@ export class UserResolver {
 		const user = new UserModel({
 			...userInput,
 		} as User);
-		return await user.save();
+		await user.save();
+		return user;
 	}
 
 	@FieldResolver()

@@ -35,10 +35,10 @@ export class BoardResolver {
 	async createBoard(
 		@Arg('board') boardInput: BoardInput,
 		@Arg('teamId', (type) => ObjectIdScalar, { nullable: true })
-		teamId: ObjectId,
+		teamId: ObjectId
 	): Promise<Board> {
 		const board = new BoardModel({
-			...boardInput,
+			name: 'test',
 			team: teamId,
 		} as Board);
 
@@ -60,7 +60,9 @@ export class BoardResolver {
 		board.lists.push(inProgressList);
 		board.lists.push(doneList);
 
-		return await board.save();
+		await board.save();
+
+		return board;
 	}
 
 	@Mutation((returns) => List)
@@ -83,7 +85,7 @@ export class BoardResolver {
 	async moveList(
 		@Arg('boardId', (type) => ObjectIdScalar) boardId: ObjectId,
 		@Arg('listId', (type) => ObjectIdScalar) listId: ObjectId,
-		@Arg('index', (type) => Int) index: number,
+		@Arg('index', (type) => Int) index: number
 	) {
 		const board = await BoardModel.findById(boardId);
 		if (!board) {
@@ -91,7 +93,7 @@ export class BoardResolver {
 		}
 
 		const listIndex = board.lists.findIndex(
-			(list) => list._id.toHexString() == listId.toHexString(),
+			(list) => list._id.toHexString() == listId.toHexString()
 		);
 		if (!listIndex) {
 			throw new Error('Invalid List id');
@@ -108,7 +110,7 @@ export class BoardResolver {
 		@Arg('startListId', (type) => ObjectIdScalar) startId: ObjectId,
 		@Arg('goalListId', (type) => ObjectIdScalar) goalId: ObjectId,
 		@Arg('taskId', (type) => ObjectIdScalar) taskId: ObjectId,
-		@Arg('index', (type) => Int) index: number,
+		@Arg('index', (type) => Int) index: number
 	) {
 		const board = await BoardModel.findById(boardId);
 		if (!board) {
@@ -116,21 +118,21 @@ export class BoardResolver {
 		}
 
 		const startList = board.lists.find(
-			(list) => list._id.toHexString() == startId.toHexString(),
+			(list) => list._id.toHexString() == startId.toHexString()
 		);
 		if (!startList) {
 			throw new Error('Invalid Startlist id');
 		}
 
 		const goalList = board.lists.find(
-			(list) => list._id.toHexString() == goalId.toHexString(),
+			(list) => list._id.toHexString() == goalId.toHexString()
 		);
 		if (!goalList) {
 			throw new Error('Invalid Goallist id');
 		}
 
 		const startIndex = startList.items.findIndex(
-			(task) => task._id.toHexString() == taskId.toHexString(),
+			(task) => task._id.toHexString() == taskId.toHexString()
 		);
 		if (!startIndex) {
 			throw new Error('Invalid Task id');

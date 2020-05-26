@@ -17,7 +17,7 @@ export class List {
 
 	@Field()
 	@Property({ required: true })
-	name!: String;
+	name!: string;
 
 	@Field((type) => [Task])
 	@ArrayProperty({ items: Task })

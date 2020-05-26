@@ -14,12 +14,12 @@ import { List } from './list';
 
 @ObjectType({ description: 'The Board model' })
 export class Board {
-	@Field((type) => ID)
+	@Field()
 	readonly _id!: ObjectId;
 
 	@Field()
 	@Property({ required: true })
-	name!: String;
+	name!: string;
 
 	@Field((type) => Team, { nullable: true })
 	@Property({ ref: 'Team' })

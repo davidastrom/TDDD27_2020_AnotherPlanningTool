@@ -6,5 +6,5 @@ import { Team } from '../../entities/team';
 export class TeamInput implements Partial<Team> {
 	@Field()
 	@Length(1, 127)
-	name!: String;
+	name!: string;
 }

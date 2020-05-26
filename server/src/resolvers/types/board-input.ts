@@ -6,5 +6,5 @@ import { Board } from '../../entities/board';
 export class BoardInput implements Partial<Board> {
 	@Field()
 	@Length(1, 127)
-	name!: String;
+	name!: string;
 }
