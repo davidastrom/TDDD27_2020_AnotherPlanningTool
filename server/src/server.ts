@@ -1,4 +1,4 @@
-import Express from 'express';
+import Express, { NextFunction } from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import { connect, mongo } from 'mongoose';
@@ -68,8 +68,18 @@ const main = async () => {
 		},
 	});
 
+	function handleJwtError(
+		err: any,
+		req: Express.Request,
+		res: Express.Response,
+		next: NextFunction
+	) {
+		if (err.code === 'invalid_token') return next();
+		return next(err);
+	}
+
 	app.use(cookieParser());
-	app.use(server.graphqlPath, jwtParser);
+	app.use(server.graphqlPath, jwtParser, handleJwtError);
 	app.use(
 		session({
 			secret: process.env.SESSION_SECRET || 'super secret',
