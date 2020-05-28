@@ -11,9 +11,9 @@ import { Ref } from '../types';
 
 import { Team } from './team';
 import { Board } from './board';
-import { GoogleLoginInput } from '../interfaces/google-login-input';
 import { Provider } from './provider';
 import { Profile } from 'passport-google-oauth';
+import jsonwebtoken from 'jsonwebtoken';
 
 @ObjectType({ description: 'The User model' })
 export class User {
@@ -36,28 +36,55 @@ export class User {
 	@ArrayProperty({ ref: 'Board', default: [] })
 	boards!: Ref<Board>[];
 
-	@Property({ _id: false, select: false })
+	@ArrayProperty({ items: Provider, _id: false })
 	providers!: Provider[];
 
+	token?: string;
+
 	_doc?: any;
+
+	public async generateJWT(this: User) {
+		let token = jsonwebtoken
+			.sign(
+				{
+					id: this._id.toHexString,
+				},
+				process.env.JWT_SECRET || 'super secret',
+				{
+					expiresIn: '7 days',
+				}
+			)
+			.toString();
+
+		return token;
+	}
+
+	public static async getById(
+		this: ReturnModelType<typeof User>,
+		id: string
+	) {
+		return await this.findById(id);
+	}
 
 	public static async getOrCreateGoogleUser(
 		this: ReturnModelType<typeof User>,
 		profile: Profile
 	) {
 		try {
-			let user = await this.findOne({ google_id: profile.id }).exec();
+			let type = profile.provider;
+			let id = profile.id;
+
+			let user = await this.findOne({
+				providers: {
+					$elemMatch: { type: type, id: id },
+				},
+			});
 
 			if (user) {
-				user.providers.push({
-					id: profile.id,
-					type: profile.provider,
-				});
-				await user.save();
 				return user;
 			}
 
-			user = await this.findOne({ email: profile._json.email }).exec();
+			user = await this.findOne({ email: profile._json.email });
 
 			if (user) {
 				user.providers.push({
@@ -69,7 +96,7 @@ export class User {
 			}
 
 			let newUser = new this({
-				username: profile.name,
+				username: profile.displayName,
 				email: profile._json.email,
 			});
 

@@ -18,7 +18,8 @@ import { TaskResolver } from './resolvers/task-resolver';
 import { Context } from './interfaces/context';
 import { ErrorInterceptor } from './middleware/error-interceptor';
 import { passportSetup } from './passport';
-import { errSchema } from './utils/responses';
+import { errSchema, resSchema } from './utils/responses';
+import { TokenUser } from './interfaces/token-user';
 
 const main = async () => {
 	const schema = await buildSchema({
@@ -93,10 +94,21 @@ const main = async () => {
 			session: false,
 		}),
 		(req, res) => {
-			if (!req.user)
+			if (!req.user) {
 				res.status(httpStatus.NOT_FOUND).send(
 					errSchema('User not found', httpStatus.NOT_FOUND)
 				);
+			}
+			if (req.user) {
+				let token_user = (req.user as any) as TokenUser;
+				res.cookie('token', token_user.token, {
+					expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+					httpOnly: true,
+				});
+				res.status(httpStatus.OK).send(
+					resSchema(req.user, httpStatus.OK)
+				);
+			}
 		}
 	);
 

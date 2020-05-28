@@ -4,8 +4,7 @@ import {
 	Profile,
 	VerifyFunction,
 } from 'passport-google-oauth';
-import { Context } from './interfaces/context';
-import { UserModel } from './entities/user';
+import { UserModel, User } from './entities/user';
 
 export const passportSetup = () => {
 	const GoogleStrategyCallback = async (
@@ -16,7 +15,7 @@ export const passportSetup = () => {
 	) => {
 		try {
 			let user = await UserModel.getOrCreateGoogleUser(profile);
-
+			user.token = await user.generateJWT();
 			done(null, user);
 		} catch (e) {
 			done(e);
@@ -33,4 +32,17 @@ export const passportSetup = () => {
 			GoogleStrategyCallback
 		)
 	);
+
+	passport.serializeUser((user: User, done) => {
+		done(null, user._id);
+	});
+
+	passport.deserializeUser((id: string, done) => {
+		try {
+			let user = UserModel.getById(id);
+			done(null, user);
+		} catch (e) {
+			done(e);
+		}
+	});
 };
