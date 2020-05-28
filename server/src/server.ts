@@ -48,6 +48,13 @@ const main = async () => {
 			let user = req.user;
 			return { req, user, res };
 		},
+		tracing: true,
+		cacheControl: true,
+		playground: {
+			settings: {
+				'request.credentials': 'include',
+			},
+		},
 	});
 
 	const app = Express();
