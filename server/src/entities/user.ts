@@ -47,7 +47,7 @@ export class User {
 		let token = jsonwebtoken
 			.sign(
 				{
-					id: this._id.toHexString,
+					id: this._id.toHexString(),
 				},
 				process.env.JWT_SECRET || 'super secret',
 				{
@@ -55,7 +55,6 @@ export class User {
 				}
 			)
 			.toString();
-
 		return token;
 	}
 
