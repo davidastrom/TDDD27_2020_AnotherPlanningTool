@@ -1,3 +1,4 @@
 export interface TokenUser extends Express.User {
-	token: string;
+	id?: string;
+	token?: string;
 }

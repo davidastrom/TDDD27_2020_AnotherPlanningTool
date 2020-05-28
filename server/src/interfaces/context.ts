@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
+import { TokenUser } from './token-user';
 
 export interface Context {
 	req: Request;
-	user: Request['user'];
+	user: TokenUser;
 	res: Response;
 }

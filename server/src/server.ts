@@ -45,7 +45,7 @@ const main = async () => {
 	const server = new ApolloServer({
 		schema,
 		context: ({ req, res }): Context => {
-			let user = req.user;
+			let user = req.user as TokenUser;
 			return { req, user, res };
 		},
 		tracing: true,
