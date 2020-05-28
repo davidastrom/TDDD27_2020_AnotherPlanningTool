@@ -58,7 +58,7 @@ const main = async () => {
 	});
 
 	app.use(cookieParser());
-	app.use(jwtParser);
+	app.use(server.graphqlPath, jwtParser);
 	app.use(
 		session({
 			secret: process.env.SESSION_SECRET || 'super secret',
