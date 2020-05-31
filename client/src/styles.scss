@@ -1,1 +1,42 @@
 /* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+	height: 100%;
+}
+body {
+	margin: 0;
+	font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+app-root {
+	position: absolute;
+	display: -webkit-box;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	top: 64px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+app-root > .header-nav {
+	position: fixed;
+	top: 0;
+}
+
+app-root > .page-container {
+	-webkit-box-flex: 1;
+	flex: 1;
+}
+
+.full-height {
+	height: 100%;
+}
+
+@media (max-width: 599px) {
+	app-root {
+		top: 56px;
+	}
+}

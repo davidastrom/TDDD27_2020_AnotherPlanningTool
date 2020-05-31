@@ -4,12 +4,12 @@ services:
     angular-client:
         container_name: angular-client
         build: ./client
-        env_file:
-            - client.env
         ports:
             - '4200:4200'
         volumes:
             - ./client/src:/usr/src/app/src
+        depends_on:
+            - express-server
 
     express-server:
         container_name: express-server
