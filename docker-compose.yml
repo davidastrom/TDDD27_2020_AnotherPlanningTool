@@ -10,6 +10,8 @@ services:
             - ./client/src:/usr/src/app/src
         depends_on:
             - express-server
+        networks:
+            - backend-net
 
     express-server:
         container_name: express-server
@@ -21,10 +23,11 @@ services:
             - ./server/src:/usr/src/app/src
         env_file:
             - server.env
-        links:
-            - mongo-database
         depends_on:
             - mongo-database
+        networks:
+            - backend-net
+            - db-net
 
     mongo-database:
         container_name: mongo-database
@@ -33,3 +36,11 @@ services:
             - '/data/db:/data/db'
         ports:
             - '27017:27017'
+        networks:
+            - db-net
+
+networks:
+    backend-net:
+        driver: bridge
+    db-net:
+        driver: bridge

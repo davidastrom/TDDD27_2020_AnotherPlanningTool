@@ -11,7 +11,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { LoginComponent } from './components/login/login.component';
 import { ProfileListComponent } from './components/profile-list/profile-list.component';
 
-import { AuthService } from './services/auth/auth.service';
+import { AuthService } from './auth/auth.service';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';

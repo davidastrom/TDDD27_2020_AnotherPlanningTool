@@ -7,6 +7,7 @@ import jwt from 'express-jwt';
 import httpStatus from 'http-status-codes';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import cors from 'cors';
 
 import { environment } from './environments/environment';
 
@@ -58,6 +59,18 @@ const main = async () => {
 	});
 
 	const app = Express();
+
+	app.use(cors());
+
+	app.use(function (req, res, next) {
+		res.header('Access-Control-Allow-Origin', '*');
+		res.header('Access-Control-Allow-Headers', 'Content-Type');
+		res.header(
+			'Access-Control-Allow-Methods',
+			'GET, POST, OPTIONS, PUT, PATCH, DELETE'
+		);
+		next();
+	});
 
 	const jwtParser = jwt({
 		credentialsRequired: false,
@@ -112,8 +125,8 @@ const main = async () => {
 		}),
 		(req, res) => {
 			if (!req.user) {
-				res.status(httpStatus.NOT_FOUND).send(
-					errSchema('User not found', httpStatus.NOT_FOUND)
+				res.status(httpStatus.UNAUTHORIZED).send(
+					errSchema('User not found', httpStatus.UNAUTHORIZED)
 				);
 			}
 			if (req.user) {
@@ -122,8 +135,8 @@ const main = async () => {
 					expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
 					httpOnly: true,
 				});
-				res.status(httpStatus.OK).send(
-					resSchema(req.user, httpStatus.OK)
+				res.status(httpStatus.OK).redirect(
+					process.env.CLIENT_ORIGIN || 'http://localhost:4200'
 				);
 			}
 		}

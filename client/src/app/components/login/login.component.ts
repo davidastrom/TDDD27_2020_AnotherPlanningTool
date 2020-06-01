@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/services/auth/auth.service';
+import { AuthService } from 'src/app/auth/auth.service';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 
 @Component({
