@@ -20,7 +20,7 @@
   "homepage": "https://github.com/Qnott/TDDD27_2020_AnotherPlanningTool#readme",
   "dependencies": {
     "@typegoose/typegoose": "^7.0.0",
-    "apollo-server-express": "^2.13.0",
+    "apollo-server-express": "^2.14.2",
     "class-validator": "^0.12.2",
     "compression": "^1.7.4",
     "concurrently": "^5.2.0",
