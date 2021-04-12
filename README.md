@@ -1,4 +1,6 @@
-# TDDD27_2020_AnotherPlanningTool
+# TDDD27_2021_AnotherPlanningTool
+
+Project from 2020 course to be finished during 2021 course
 
 A Trello-like planning tool made as a part of the course TDDD27 Advanced Web Programming at Linköping University
 
