@@ -101,7 +101,7 @@ const main = async () => {
 			cookie: { secure: process.env.NODE_ENV === 'production' },
 		})
 	);
-
+	console.log(process.env.GOOGLE_CLIENT_ID)
 	passportSetup();
 	app.use(passport.initialize());
 	app.use(passport.session());
@@ -120,7 +120,7 @@ const main = async () => {
 	app.get(
 		'/auth/google/callback',
 		passport.authenticate('google', {
-			failureRedirect: process.env.CLIENT_LOGIN_ROUTE,
+			failureRedirect: process.env.CLIENT_LOGIN_ROUTE || '/login',
 			session: false,
 		}),
 		(req, res) => {
