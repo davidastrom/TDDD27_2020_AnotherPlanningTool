@@ -38,7 +38,7 @@ export class BoardResolver {
 		teamId: ObjectId
 	): Promise<Board> {
 		const board = new BoardModel({
-			name: 'test',
+			name: boardInput.name,
 			team: teamId,
 		} as Board);
 
