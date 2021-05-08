@@ -6,7 +6,7 @@ A Trello-like planning tool made as a part of the course TDDD27 Advanced Web Pro
 
 ## Midterm Screencast link
 
-https://liuonline-my.sharepoint.com/:v:/g/personal/davas593_student_liu_se/EdfC2O7nvPJGp8ufhn8MUlgBGCoSCi5nZWrz0F9WdTv7MA?e=RjbG12
+https://liuonline-my.sharepoint.com/:v:/g/personal/davas593_student_liu_se/EREsbXoOz01Gmn6Vw1xjPMAB6UXAHC5mbcTFd3G3yNEeDg?e=zxEzlb
 
 ## Functional Specifications
 
