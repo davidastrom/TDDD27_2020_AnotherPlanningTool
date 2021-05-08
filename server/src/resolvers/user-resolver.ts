@@ -5,6 +5,7 @@ import {
 	Arg,
 	FieldResolver,
 	Root,
+	Ctx,
 } from 'type-graphql';
 import { ObjectId } from 'mongodb';
 
@@ -15,12 +16,18 @@ import { UserInput } from './types/user-input';
 
 import { Team, TeamModel } from '../entities/team';
 import { Board, BoardModel } from '../entities/board';
+import { Context } from '../interfaces/context';
 
 @Resolver((of) => User)
 export class UserResolver {
 	@Query((returns) => User, { nullable: true })
 	async user(@Arg('userId', (type) => ObjectIdScalar) userId: ObjectId) {
 		return await UserModel.findById(userId);
+	}
+
+	@Query((returns) => User, { nullable: true })
+	async currentUser(@Ctx() { user }: Context) {
+		if (user) return await UserModel.findById(user.id);
 	}
 
 	@Query((returns) => [User])

@@ -23,7 +23,7 @@ export class List {
 	@ArrayProperty({ items: Task })
 	items!: Task[];
 
-	_doc: any;
+	_doc!: any;
 }
 
 export const ListModel = getModelForClass(List);

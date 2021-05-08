@@ -1,33 +1,46 @@
-version: '3.8' 
+version: '3.8'
 
 services:
     angular-client:
         container_name: angular-client
         build: ./client
         ports:
-            - "4200:4200"
+            - '4200:4200'
         volumes:
             - ./client/src:/usr/src/app/src
- 
+        depends_on:
+            - express-server
+        networks:
+            - backend-net
+
     express-server:
         container_name: express-server
         build: ./server
         ports:
-            - "8080:8080" 
+            - '8080:8080'
         command: npm run start:dev
         volumes:
             - ./server/src:/usr/src/app/src
-        environment:
-            - MONGO_URL=mongodb://mongo-database:27017/anotherplanningtool
-        links:
-            - mongo-database
+        env_file:
+            - server.env
         depends_on:
             - mongo-database
- 
+        networks:
+            - backend-net
+            - db-net
+
     mongo-database:
         container_name: mongo-database
         image: mongo
         volumes:
-            - "/data/db:/data/db"
+            - '/data/db:/data/db'
         ports:
-            - "27017:27017"
+            - '27017:27017'
+        networks:
+            - db-net
+
+networks:
+    backend-net:
+        driver: bridge
+    db-net:
+        driver: bridge
