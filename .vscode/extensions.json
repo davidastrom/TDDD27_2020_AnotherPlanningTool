@@ -1,0 +1,28 @@
+{
+    "recommendations": [
+        "Angular.ng-template",
+        "CoenraadS.bracket-pair-colorizer-2",
+        "PKief.material-icon-theme",
+        "VisualStudioExptTeam.vscodeintellicode",
+        "dbaeumer.vscode-eslint",
+        "eamodio.gitlens",
+        "ecmel.vscode-html-css",
+        "eg2.vscode-npm-script",
+        "esbenp.prettier-vscode",
+        "firefox-devtools.vscode-firefox-debug",
+        "formulahendry.auto-close-tag",
+        "formulahendry.auto-rename-tag",
+        "jgclark.vscode-todo-highlight",
+        "johnpapa.Angular2",
+        "mikestead.dotenv",
+        "ms-azuretools.vscode-docker",
+        "ms-vscode-remote.remote-containers",
+        "ms-vscode-remote.remote-wsl",
+        "msjsdiag.debugger-for-chrome",
+        "nrwl.angular-console",
+        "octref.vetur",
+        "redhat.vscode-yaml",
+        "ritwickdey.LiveServer",
+        "zhuangtongfa.material-theme"
+    ]
+}
