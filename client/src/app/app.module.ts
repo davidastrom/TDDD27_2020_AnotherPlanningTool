@@ -11,12 +11,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { LoginComponent } from './components/login/login.component';
 import { ProfileListComponent } from './components/profile-list/profile-list.component';
 
-import { AuthService } from './auth/auth.service';
-
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SocialAuthServiceConfig, SocialLoginModule, GoogleLoginProvider } from "angularx-social-login"
+import { environment } from 'src/environments/environment';
 
 @NgModule({
 	declarations: [AppComponent, LoginComponent, ProfileListComponent],
@@ -32,8 +32,22 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 		FlexLayoutModule,
 		MatButtonModule,
 		FontAwesomeModule,
+		SocialLoginModule
 	],
-	providers: [AuthService],
+	providers: [
+		{
+			provide: 'SocialAuthServiceConfig',
+			useValue: {
+				autoLogin: false,
+				providers: [
+					{
+						id: GoogleLoginProvider.PROVIDER_ID,
+						provider: new GoogleLoginProvider(environment.auth.googleClientId)
+					}
+				]
+			} as SocialAuthServiceConfig,
+		}
+	],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -27,6 +27,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.28",
     "@fortawesome/free-brands-svg-icons": "^5.13.0",
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
+    "angularx-social-login": "^4.0.1",
     "apollo-angular": "^1.9.1",
     "apollo-angular-link-http": "^1.10.0",
     "apollo-cache-inmemory": "^1.6.0",
