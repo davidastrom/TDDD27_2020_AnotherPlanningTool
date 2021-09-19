@@ -8,7 +8,7 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import cors from 'cors';
 
-import { environment } from './environments/environmentConfig';
+import env from './environments/environmentConfig';
 
 import { UserResolver } from './resolvers/user-resolver';
 import { BoardResolver } from './resolvers/board-resolver';
@@ -33,7 +33,7 @@ const main = async () => {
 		globalMiddlewares: [ErrorInterceptor],
 	});
 
-	await mongoose.connect(environment.mongo.url, environment.mongo.options);
+	await mongoose.connect(env.mongo.url, env.mongo.options);
 	const db = mongoose.connection;
 	db.on('error', function (err) {
 		console.error('MongoDB connection error: ' + err);
@@ -70,7 +70,7 @@ const main = async () => {
 
 	const jwtParser = jwt({
 		credentialsRequired: false,
-		secret: environment.auth.jwt.secret,
+		secret: env.auth.jwt.secret,
 		algorithms: ['RS256'],
 		getToken: (req) => {
 			if (req.cookies.token) return req.cookies.token;
@@ -92,7 +92,7 @@ const main = async () => {
 	app.use(server.graphqlPath, jwtParser, handleJwtError);
 	app.use(
 		session({
-			secret: process.env.SESSION_SECRET || 'super secret',
+			secret: env.sessionSecret,
 			resave: false,
 			saveUninitialized: false,
 			cookie: { secure: process.env.NODE_ENV === 'production' },
