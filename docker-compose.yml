@@ -6,6 +6,7 @@ services:
     build: ./client
     ports:
       - "4200:4200"
+    command: npm run start:docker.dev
     volumes:
       - ./client/src:/usr/src/app/src
     depends_on:
