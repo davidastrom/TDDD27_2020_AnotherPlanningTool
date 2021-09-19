@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "app-layout.component.scss"
+    ],
+    "names": [],
+    "file": "app-layout.component.css"
+}

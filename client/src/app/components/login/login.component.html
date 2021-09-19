@@ -1,11 +1,7 @@
-<div class="full-height" fxLayout="row" fxLayoutAlign="center center">
-	<mat-card>
-		<mat-card-content>
-			<p class="mat-title">Please login to continue</p>
-			<button mat-raised-button color="secondary" (click)="googleLogin()">
-				<fa-icon [icon]="faGoogle"></fa-icon>
-				Login with Google
-			</button>
-		</mat-card-content>
-	</mat-card>
+<div class="card">
+	<p>Please login to continue</p>
+	<button (click)="googleLogin()">
+		<fa-icon [icon]="faGoogle"></fa-icon>
+		Login with Google
+	</button>
 </div>
