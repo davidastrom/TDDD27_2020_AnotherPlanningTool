@@ -1,5 +1,19 @@
 <div class="container">
 	<div class="row justify-content-center">
-		<div class="col col-lg-4">login</div>
+		<div class="col col-lg-4">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">Sign in</h4>
+					<button
+						type="button"
+						(click)="signInWithGoogle()"
+						class="btn btn-primary btn-block btn-lg"
+					>
+						<fa-icon [icon]="faGoogle"></fa-icon>
+						Sign in with Google
+					</button>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>

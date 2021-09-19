@@ -11,6 +11,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
 	GoogleLoginProvider,
 	SocialAuthServiceConfig,
+	SocialLoginModule,
 } from 'angularx-social-login';
 import { environment } from 'src/environments/environment';
 import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
@@ -32,6 +33,7 @@ import { HomeComponent } from './components/home/home.component';
 		GraphQLModule,
 		HttpClientModule,
 		FontAwesomeModule,
+		SocialLoginModule,
 	],
 	providers: [
 		{
@@ -41,9 +43,7 @@ import { HomeComponent } from './components/home/home.component';
 				providers: [
 					{
 						id: GoogleLoginProvider.PROVIDER_ID,
-						provider: new GoogleLoginProvider(
-							environment.auth.googleClientId
-						),
+						provider: new GoogleLoginProvider(environment.auth.google.clientId),
 					},
 				],
 			} as SocialAuthServiceConfig,

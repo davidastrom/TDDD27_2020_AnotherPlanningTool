@@ -79,13 +79,16 @@
 							"browserTarget": "client:build:production"
 						},
 						"development": {
-							"browserTarget": "client:build:development"
+							"browserTarget": "client:build:development",
+							"ssl": true
 						},
 						"local.dev": {
-							"browserTarget": "client:build:development"
+							"browserTarget": "client:build:development",
+							"ssl": true
 						},
 						"docker.dev": {
-							"browserTarget": "client:build:docker.dev"
+							"browserTarget": "client:build:docker.dev",
+							"ssl": true
 						}
 					},
 					"defaultConfiguration": "development"

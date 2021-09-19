@@ -5,6 +5,7 @@ import { AppLayoutComponent } from './layouts/app-layout/app-layout.component';
 import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
 
 const routes: Routes = [
+	{ path: 'login', component: LoginLayoutComponent },
 	{
 		path: '',
 		component: AppLayoutComponent,
@@ -16,7 +17,6 @@ const routes: Routes = [
 			},
 		],
 	},
-	{ path: 'login', component: LoginLayoutComponent },
 	{ path: '**', redirectTo: '' },
 ];
 
