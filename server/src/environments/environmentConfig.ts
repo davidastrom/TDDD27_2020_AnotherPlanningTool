@@ -13,6 +13,7 @@ export const environment = {
       process.env.MONGO_URL || "mongodb://localhost:27017/anotherplanningtool",
     options: {
       useNewUrlParser: true,
+      useUnifiedTopology: true,
     },
   },
   auth: {
