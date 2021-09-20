@@ -10,11 +10,7 @@ import { GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
 export class LoginLayoutComponent implements OnInit {
 	faGoogle = faGoogle;
 
-	constructor(private authService: SocialAuthService) {}
+	constructor() {}
 
 	ngOnInit(): void {}
-
-	signInWithGoogle(): void {
-		this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
-	}
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
 	selector: 'app-login',
@@ -10,11 +10,11 @@ import { GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
 export class LoginComponent implements OnInit {
 	faGoogle = faGoogle;
 
-	constructor(private authService: SocialAuthService) {}
+	constructor(private authService: AuthService) {}
 
 	ngOnInit(): void {}
 
-	googleLogin() {
-		this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+	signInWithGoogle() {
+		this.authService.signInWithGoogle();
 	}
 }
