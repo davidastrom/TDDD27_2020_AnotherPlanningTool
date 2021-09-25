@@ -22,8 +22,8 @@ export default {
 			secret: process.env.JWT_SECRET || 'super secret',
 		},
 		google: {
-			clientId: process.env.GOOGLE_CLIENT_ID || null,
-			clientSecret: process.env.GOOGLE_CLIENT_SECRET || null,
+			clientId: process.env.GOOGLE_CLIENT_ID,
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
 		},
 	},
 };

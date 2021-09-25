@@ -2,11 +2,12 @@ import Express, { NextFunction } from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import mongoose from 'mongoose';
-import jwt from 'express-jwt';
+import expressJwt from 'express-jwt';
 import httpStatus from 'http-status-codes';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import cors from 'cors';
+import jwt from 'jsonwebtoken';
 
 import env from './environments/environmentConfig';
 
@@ -17,8 +18,7 @@ import { TeamResolver } from './resolvers/team-resolver';
 import { TaskResolver } from './resolvers/task-resolver';
 import { Context } from './interfaces/context';
 import { ErrorInterceptor } from './middleware/error-interceptor';
-import { errSchema, resSchema } from './utils/responses';
-import { TokenUser } from './interfaces/token-user';
+import GoogleAuthConfig from './auth/google-auth-config';
 
 const main = async () => {
 	const schema = await buildSchema({
@@ -41,10 +41,10 @@ const main = async () => {
 
 	const server = new ApolloServer({
 		schema,
-		context: ({ req, res }): Context => {
-			let user = req.user as TokenUser;
-			return { req, user, res };
-		},
+		// context: ({ req, res }): Context => {
+		// 	// let user = req.user as TokenUser;
+		// 	// return { req, user, res };
+		// },
 		tracing: true,
 		cacheControl: true,
 		playground: {
@@ -68,12 +68,21 @@ const main = async () => {
 		next();
 	});
 
-	const jwtParser = jwt({
+	const auth = { google: new GoogleAuthConfig() };
+
+	const jwtParser = expressJwt({
 		credentialsRequired: false,
 		secret: env.auth.jwt.secret,
 		algorithms: ['RS256'],
 		getToken: (req) => {
-			if (req.cookies.token) return req.cookies.token;
+			if (
+				req.headers.authorization &&
+				req.headers.authorization.split(' ')[0] === 'Bearer'
+			) {
+				return req.headers.authorization.split(' ')[1];
+			} else if (req.query && req.query.token) {
+				return req.query.token;
+			}
 			return null;
 		},
 	});
@@ -90,49 +99,17 @@ const main = async () => {
 
 	app.use(cookieParser());
 	app.use(server.graphqlPath, jwtParser, handleJwtError);
-	app.use(
-		session({
-			secret: env.sessionSecret,
-			resave: false,
-			saveUninitialized: false,
-			cookie: { secure: process.env.NODE_ENV === 'production' },
-		})
-	);
-	//   passportSetup();
-	//   app.use(passport.initialize());
-	//   app.use(passport.session());
 
-	//   app.get(
-	//     "/auth/google",
-	//     passport.authenticate("google", {
-	//       scope: ["https://www.googleapis.com/auth/plus.login", "profile", "email"],
-	//     })
-	//   );
+	app.post('/auth/google/signin', async (req, res) => {
+		let googleToken = req.body.token;
+		let user = await auth.google.signIn(googleToken);
+		let authToken = await user?.generateJWT();
 
-	//   app.get(
-	//     "/auth/google/callback",
-	//     passport.authenticate("google", {
-	//       failureRedirect: process.env.CLIENT_LOGIN_ROUTE || "/login",
-	//       session: false,
-	//     }),
-	//     (req, res) => {
-	//       if (!req.user) {
-	//         res
-	//           .status(httpStatus.UNAUTHORIZED)
-	//           .send(errSchema("User not found", httpStatus.UNAUTHORIZED));
-	//       }
-	//       if (req.user) {
-	//         let token_user = req.user as any as TokenUser;
-	//         res.cookie("token", token_user.token, {
-	//           expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-	//           httpOnly: true,
-	//         });
-	//         res
-	//           .status(httpStatus.OK)
-	//           .redirect(process.env.CLIENT_ORIGIN || "http://localhost:4200");
-	//       }
-	//     }
-	//   );
+		res.status(200).send({
+			user: user,
+			token: authToken,
+		});
+	});
 
 	server.applyMiddleware({
 		app,

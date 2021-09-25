@@ -11,9 +11,9 @@ import { Ref } from '../types';
 
 import { Team } from './team';
 import { Board } from './board';
-import { Provider } from './provider';
-import { Profile } from 'passport-google-oauth';
 import jsonwebtoken from 'jsonwebtoken';
+import { TokenPayload } from 'google-auth-library';
+import env from '../environments/environmentConfig';
 
 @ObjectType({ description: 'The User model' })
 export class User {
@@ -36,8 +36,8 @@ export class User {
 	@ArrayProperty({ ref: 'Board', default: [] })
 	boards!: Ref<Board>[];
 
-	@ArrayProperty({ items: Provider, _id: false })
-	providers!: Provider[];
+	@Property({ unique: true })
+	googleProfileId: string | undefined;
 
 	token?: string;
 
@@ -49,7 +49,7 @@ export class User {
 				{
 					id: this._id.toHexString(),
 				},
-				process.env.JWT_SECRET || 'super secret',
+				env.auth.jwt.secret,
 				{
 					expiresIn: '7 days',
 				}
@@ -58,56 +58,39 @@ export class User {
 		return token;
 	}
 
-	public static async getById(
-		this: ReturnModelType<typeof User>,
-		id: string
-	) {
-		return await this.findById(id);
+	public static async getById(this: ReturnModelType<typeof User>, id: string) {
+		return await this.findById(id).exec();
 	}
 
 	public static async getOrCreateGoogleUser(
 		this: ReturnModelType<typeof User>,
-		profile: Profile
+		profile: TokenPayload
 	) {
 		try {
-			let type = profile.provider;
-			let id = profile.id;
-
-			let user = await this.findOne({
-				providers: {
-					$elemMatch: { type: type, id: id },
-				},
-			});
+			let user = await this.findOne({ googleProfileId: profile.sub }).exec();
 
 			if (user) {
 				return user;
 			}
 
-			user = await this.findOne({ email: profile._json.email });
+			user = await this.findOne({ email: profile.email }).exec();
 
 			if (user) {
-				user.providers.push({
-					id: profile.id,
-					type: profile.provider,
-				});
+				user.googleProfileId = profile.sub;
 				await user.save();
 				return user;
 			}
 
 			let newUser = new this({
-				username: profile.displayName,
-				email: profile._json.email,
-			});
-
-			newUser.providers.push({
-				id: profile.id,
-				type: profile.provider,
+				username: profile.name,
+				email: profile.email,
+				googleProfileId: profile.sub,
 			});
 
 			newUser.save();
 			return newUser;
 		} catch (e) {
-			throw Error(e);
+			console.log(e);
 		}
 	}
 }
