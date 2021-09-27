@@ -26,4 +26,8 @@ export default {
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
 		},
 	},
+	https: {
+		key: process.env.HTTPS_KEY || '',
+		cert: process.env.HTTPS_CERT || '',
+	},
 };
