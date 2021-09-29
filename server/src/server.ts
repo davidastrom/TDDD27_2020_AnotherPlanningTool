@@ -103,7 +103,6 @@ const main = async () => {
 	app.use(server.graphqlPath, jwtParser, handleJwtError);
 
 	app.post('/auth/google/signin', async (req, res) => {
-		console.log(req.body);
 		let googleToken = req.body.token;
 		let user = await auth.google.signIn(googleToken);
 		let authToken = await user?.generateJWT();

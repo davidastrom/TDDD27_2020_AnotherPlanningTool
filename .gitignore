@@ -11,3 +11,7 @@ data/
 
 #Environment variables
 *.env
+
+# SSL Certs
+server/ssl/*.crt
+server/ssl/*.key
