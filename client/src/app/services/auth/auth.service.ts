@@ -19,6 +19,8 @@ export class AuthService {
 
 	public signedIn$ = this._signedIn.asObservable();
 
+	public redirectUrl = '';
+
 	constructor(
 		private socialAuthService: SocialAuthService,
 		private http: HttpClient,
@@ -47,6 +49,22 @@ export class AuthService {
 		this.tokenService.clearToken();
 		this.userService.clearUser();
 		this._signedIn.next(false);
+	}
+
+	checkSignInStatus() {
+		var token = this.tokenService.getToken();
+		console.log(token);
+		if (token) {
+			this._signedIn.next(true);
+			return true;
+		}
+
+		this._signedIn.next(false);
+		return false;
+	}
+
+	getSignedIn() {
+		return this._signedIn.getValue();
 	}
 }
 

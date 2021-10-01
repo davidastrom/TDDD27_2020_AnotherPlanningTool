@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
 		await this.authService.signInWithGoogle();
 		this.authService.signedIn$.subscribe((loggedIn) => {
 			if (loggedIn) {
-				this.router.navigate(['/']);
+				this.router.navigate([this.authService.redirectUrl]);
 			}
 		});
 	}
