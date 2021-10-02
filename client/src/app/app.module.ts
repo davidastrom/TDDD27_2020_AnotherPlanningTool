@@ -17,6 +17,9 @@ import { environment } from 'src/environments/environment';
 import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
 import { AppLayoutComponent } from './layouts/app-layout/app-layout.component';
 import { HomeComponent } from './components/home/home.component';
+import { ProfileInfoComponent } from './components/profile-info/profile-info.component';
+import { HomeListItemComponent } from './components/home-list-item/home-list-item.component';
+import { HomeListComponent } from './components/home-list/home-list.component';
 
 @NgModule({
 	declarations: [
@@ -25,6 +28,9 @@ import { HomeComponent } from './components/home/home.component';
 		LoginLayoutComponent,
 		AppLayoutComponent,
 		HomeComponent,
+		ProfileInfoComponent,
+		HomeListItemComponent,
+		HomeListComponent,
 	],
 	imports: [
 		BrowserModule,
