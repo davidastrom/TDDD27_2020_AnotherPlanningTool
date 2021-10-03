@@ -1,11 +1,12 @@
 import Express, { NextFunction } from 'express';
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import mongoose from 'mongoose';
 import expressJwt from 'express-jwt';
 import cors from 'cors';
 import fs from 'fs';
 import https from 'https';
+import http from 'http';
 import bodyParser from 'body-parser';
 
 import env from './environments/environmentConfig';
@@ -18,6 +19,7 @@ import { TaskResolver } from './resolvers/task-resolver';
 import { Context } from './interfaces/context';
 import { ErrorInterceptor } from './middleware/error-interceptor';
 import GoogleAuthConfig from './auth/google-auth-config';
+import { UserModel } from './entities/user';
 
 const main = async () => {
 	/* Set up and connect to db */
@@ -35,6 +37,7 @@ const main = async () => {
 	const app = Express();
 
 	const httpsServer = https.createServer({ key: key, cert: cert }, app);
+	// const httpsServer = http.createServer(app);
 
 	/* Set up graphql schema and Apollo server */
 	const schema = await buildSchema({
@@ -49,7 +52,29 @@ const main = async () => {
 		globalMiddlewares: [ErrorInterceptor],
 	});
 
-	const server = new ApolloServer({ schema: schema });
+	const server = new ApolloServer({
+		schema: schema,
+		context: async ({ req }) => {
+			// Get the user token from the headers.
+			let token: string = '';
+			if (
+				req.headers.authorization &&
+				req.headers.authorization.split(' ')[0] === 'Bearer'
+			) {
+				token = req.headers.authorization.split(' ')[1];
+			}
+
+			// Try to retrieve a user with the token
+			const user = await UserModel.getByToken(token);
+
+			if (!user) {
+				throw new AuthenticationError('Not logged in');
+			}
+
+			// Add the user to the context
+			return { user };
+		},
+	});
 
 	app.use(cors());
 
@@ -72,35 +97,6 @@ const main = async () => {
 	app.use(bodyParser.json());
 
 	const auth = { google: new GoogleAuthConfig() };
-
-	const jwtParser = expressJwt({
-		credentialsRequired: false,
-		secret: env.auth.jwt.secret,
-		algorithms: ['RS256'],
-		getToken: (req) => {
-			if (
-				req.headers.authorization &&
-				req.headers.authorization.split(' ')[0] === 'Bearer'
-			) {
-				return req.headers.authorization.split(' ')[1];
-			} else if (req.query && req.query.token) {
-				return req.query.token;
-			}
-			return null;
-		},
-	});
-
-	function handleJwtError(
-		err: any,
-		req: Express.Request,
-		res: Express.Response,
-		next: NextFunction
-	) {
-		if (err.code === 'invalid_token') return next();
-		return next(err);
-	}
-
-	app.use(server.graphqlPath, jwtParser, handleJwtError);
 
 	app.post('/auth/google/signin', async (req, res) => {
 		let googleToken = req.body.token;

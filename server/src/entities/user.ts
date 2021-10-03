@@ -62,6 +62,20 @@ export class User {
 		return await this.findById(id).exec();
 	}
 
+	public static async getByToken(
+		this: ReturnModelType<typeof User>,
+		token: string
+	) {
+		try {
+			let decoded = jsonwebtoken.verify(token, env.auth.jwt.secret) as {
+				id: string;
+			};
+			return await this.getById(decoded.id);
+		} catch (error) {
+			throw error;
+		}
+	}
+
 	public static async getOrCreateGoogleUser(
 		this: ReturnModelType<typeof User>,
 		profile: TokenPayload
