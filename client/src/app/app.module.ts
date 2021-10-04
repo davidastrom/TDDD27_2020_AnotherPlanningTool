@@ -4,8 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { GraphQLModule } from './graphql.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { LoginComponent } from './components/login/login.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -20,7 +19,12 @@ import { HomeComponent } from './components/home/home.component';
 import { ProfileInfoComponent } from './components/profile-info/profile-info.component';
 import { HomeListItemComponent } from './components/home-list-item/home-list-item.component';
 import { HomeListComponent } from './components/home-list/home-list.component';
+import { httpInterceptorProviders } from './http-interceptors/http-interceptors';
+import { APOLLO_OPTIONS } from 'apollo-angular';
+import { HttpLink } from 'apollo-angular/http';
+import { InMemoryCache } from '@apollo/client/core';
 
+const graphQlUri = environment.apiUrl + '/graphql'; // <-- add the URL of the GraphQL server here
 @NgModule({
 	declarations: [
 		AppComponent,
@@ -36,7 +40,6 @@ import { HomeListComponent } from './components/home-list/home-list.component';
 		BrowserModule,
 		AppRoutingModule,
 		NgbModule,
-		GraphQLModule,
 		HttpClientModule,
 		FontAwesomeModule,
 		SocialLoginModule,
@@ -54,6 +57,22 @@ import { HomeListComponent } from './components/home-list/home-list.component';
 				],
 			} as SocialAuthServiceConfig,
 		},
+		{
+			provide: APOLLO_OPTIONS,
+			useFactory: (httpLink: HttpLink) => {
+				const http = httpLink.create({
+					uri: 'graphQlUri',
+				});
+				return {
+					cache: new InMemoryCache(),
+					link: httpLink.create({
+						uri: graphQlUri,
+					}),
+				};
+			},
+			deps: [HttpLink],
+		},
+		httpInterceptorProviders,
 	],
 	bootstrap: [AppComponent],
 })
