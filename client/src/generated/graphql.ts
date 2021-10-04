@@ -178,6 +178,7 @@ export type User = {
   _id: Scalars['ID'];
   boards: Array<Board>;
   email: Scalars['String'];
+  picture: Scalars['String'];
   teams: Array<Team>;
   username: Scalars['String'];
 };
