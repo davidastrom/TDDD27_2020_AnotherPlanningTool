@@ -28,6 +28,10 @@ export class User {
 	@Property({ required: true, unique: true })
 	email!: string;
 
+	@Field()
+	@Property()
+	picture?: string;
+
 	@Field((type) => [Team])
 	@ArrayProperty({ ref: 'Team', default: [] })
 	teams!: Ref<Team>[];
@@ -99,6 +103,7 @@ export class User {
 				username: profile.name,
 				email: profile.email,
 				googleProfileId: profile.sub,
+				picture: profile.picture,
 			});
 
 			newUser.save();

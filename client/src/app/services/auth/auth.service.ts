@@ -5,7 +5,6 @@ import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, first, retry, take } from 'rxjs/operators';
 import { TokenService } from '../token/token.service';
-import { UserProfile } from 'src/app/models/user.model';
 import { UserService } from '../user/user.service';
 
 const httpOptions = {
@@ -19,7 +18,7 @@ export class AuthService {
 
 	public signedIn$ = this._signedIn.asObservable();
 
-	public redirectUrl = '';
+	public redirectUrl = '/';
 
 	constructor(
 		private socialAuthService: SocialAuthService,
@@ -39,8 +38,9 @@ export class AuthService {
 			.post<SignInInfo>(url, { token: googleUser.idToken }, httpOptions)
 			.pipe(take(1))
 			.subscribe((data) => {
+				console.log(data);
 				this.tokenService.saveToken(data.token);
-				this.userService.setUser(data.user);
+				this.userService.fetchUser();
 				this._signedIn.next(true);
 			});
 	}
@@ -53,7 +53,6 @@ export class AuthService {
 
 	checkSignInStatus() {
 		var token = this.tokenService.getToken();
-		console.log(token);
 		if (token) {
 			this._signedIn.next(true);
 			return true;
@@ -69,6 +68,5 @@ export class AuthService {
 }
 
 interface SignInInfo {
-	user: UserProfile;
 	token: string;
 }

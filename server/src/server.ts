@@ -104,7 +104,6 @@ const main = async () => {
 		let authToken = await user?.generateJWT();
 
 		res.status(200).send({
-			user: user,
 			token: authToken,
 		});
 	});

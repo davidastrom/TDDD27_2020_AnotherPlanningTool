@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { UserProfile } from 'src/app/models/user.model';
+import { User } from 'src/generated/graphql';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class UserService {
-	private _user = new BehaviorSubject<UserProfile | null>(null);
+	private _user = new BehaviorSubject<User | null>(null);
 
 	readonly user$ = this._user.asObservable();
 
@@ -16,10 +16,11 @@ export class UserService {
 		return this._user.getValue();
 	}
 
-	public setUser(user: UserProfile) {
+	public setUser(user: User) {
 		this._user.next(user);
-		console.log('User set');
 	}
+
+	public fetchUser() {}
 
 	public clearUser() {
 		this._user.next(null);
