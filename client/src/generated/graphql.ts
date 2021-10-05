@@ -180,7 +180,7 @@ export type User = {
   _id: Scalars['ID'];
   boards: Array<Board>;
   email: Scalars['String'];
-  picture: Scalars['String'];
+  picture?: Maybe<Scalars['String']>;
   teams: Array<Team>;
   username: Scalars['String'];
 };
@@ -192,14 +192,14 @@ export type UserInput = {
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CurrentUserQuery = { __typename?: 'Query', currentUser: { __typename?: 'User', _id: string, email: string, username: string, picture: string } };
+export type CurrentUserQuery = { __typename?: 'Query', currentUser: { __typename?: 'User', _id: string, email: string, username: string, picture?: string | null | undefined } };
 
 export type UserByIdQueryVariables = Exact<{
   id: Scalars['ObjectId'];
 }>;
 
 
-export type UserByIdQuery = { __typename?: 'Query', user: { __typename?: 'User', _id: string, email: string, username: string, picture: string } };
+export type UserByIdQuery = { __typename?: 'Query', user: { __typename?: 'User', _id: string, email: string, username: string, picture?: string | null | undefined } };
 
 export const CurrentUserDocument = gql`
     query currentUser {

@@ -86,7 +86,7 @@ type User {
   _id: ID!
   boards: [Board!]!
   email: String!
-  picture: String!
+  picture: String
   teams: [Team!]!
   username: String!
 }
