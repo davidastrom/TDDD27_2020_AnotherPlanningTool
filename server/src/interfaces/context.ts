@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { TokenUser } from './token-user';
+import { User } from '../entities/user';
 
 export interface Context {
 	req: Request;
-	user: TokenUser;
+	user: User;
 	res: Response;
 }
