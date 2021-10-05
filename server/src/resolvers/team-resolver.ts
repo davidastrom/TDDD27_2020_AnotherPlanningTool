@@ -5,6 +5,7 @@ import {
 	Arg,
 	FieldResolver,
 	Root,
+	Ctx,
 } from 'type-graphql';
 import { ObjectId } from 'mongodb';
 
@@ -15,61 +16,84 @@ import { TeamInput } from './types/team-input';
 
 import { User, UserModel } from '../entities/user';
 import { Board, BoardModel } from '../entities/board';
-import { UserInputError } from 'apollo-server-errors';
+import { AuthenticationError, UserInputError, ForbiddenError } from 'apollo-server-errors';
+import { Context } from '../interfaces/context';
 
 @Resolver((of) => Team)
 export class TeamResolver {
 	@Query((returns) => Team)
-	async team(@Arg('teamId', (type) => ObjectIdScalar) teamId: ObjectId) {
+	async team(@Arg('teamId', (type) => ObjectIdScalar) teamId: ObjectId, @Ctx() { user }: Context) {
+		if (!user) {
+			throw new AuthenticationError("Not logged in")
+		}
 		const team = await TeamModel.findById(teamId);
 		if (!team) {
 			throw new UserInputError('Invalid Team ID provided');
 		}
+		if (!team.members.includes(user._id)) {
+			throw new ForbiddenError("Not authorized to view resource")
+		}
 		return team;
 	}
 
-	@Query((returns) => [Team])
-	async allTeams(): Promise<Team[]> {
-		return await TeamModel.find();
-	}
+	// @Query((returns) => [Team])
+	// async allTeams(): Promise<Team[]> {
+	// 	return await TeamModel.find();
+	// }
 
 	@Mutation(() => Team)
-	async createTeam(@Arg('data') teamInput: TeamInput): Promise<Team> {
+	async createTeam(@Arg('data') teamInput: TeamInput, @Ctx() { user }: Context): Promise<Team> {
+		if (!user) {
+			throw new AuthenticationError("Not logged in")
+		}
 		const team = new TeamModel({
 			...teamInput,
+			members: [user._id]
 		});
+
+		user.teams.push(team._id)
+
 		await team.save();
+		await user.save();
 		return team;
 	}
 
 	@Mutation(() => Team)
 	async addTeamMember(
 		@Arg('teamId', (type) => ObjectIdScalar) teamId: ObjectId,
-		@Arg('userId', (type) => ObjectIdScalar) userId: ObjectId
+		@Arg('userId', (type) => ObjectIdScalar) userId: ObjectId,
+		@Ctx() { user }: Context
 	) {
-		const team = await TeamModel.findById(teamId);
-		if (!team) {
-			throw new Error('Invalid Team ID');
+		if (!user) {
+			throw new AuthenticationError("Not logged in")
 		}
 
-		const user = await UserModel.findById(userId);
-		if (!user) {
-			throw new Error('Invalid User ID');
+		const team = await TeamModel.findById(teamId);
+		if (!team) {
+			throw new UserInputError('Invalid Team ID');
+		}
+
+		if (!team.members.includes(user._id)) {
+			throw new ForbiddenError("Not authorized to edit resource")
+		}
+
+		const userModel = await UserModel.findById(userId);
+		if (!userModel) {
+			throw new UserInputError('Invalid User ID');
 		}
 
 		let userInMember: boolean = false;
-		let teamInTeams: boolean = false;
 
 		for (let id of team.members) {
-			if (id.toString() == user._id.toString()) {
+			if (id.toString() == userModel._id.toString()) {
 				userInMember = true;
 			}
 		}
 		if (!userInMember) {
-			team.members.push(user._id);
-			user.teams.push(team._id);
+			team.members.push(userModel._id);
+			userModel.teams.push(team._id);
 			await team.save();
-			await user.save();
+			await userModel.save();
 		}
 
 		return Team;
@@ -78,29 +102,38 @@ export class TeamResolver {
 	@Mutation(() => Team)
 	async removeTeamMember(
 		@Arg('teamId', (type) => ObjectIdScalar) teamId: ObjectId,
-		@Arg('userId', (type) => ObjectIdScalar) userId: ObjectId
+		@Arg('userId', (type) => ObjectIdScalar) userId: ObjectId,
+		@Ctx() { user }: Context
 	) {
-		const team = await TeamModel.findById(teamId);
-		if (!team) {
-			throw new Error('Invalid Team ID');
+		if (!user) {
+			throw new AuthenticationError("Not logged in")
 		}
 
-		const user = await UserModel.findById(userId);
-		if (!user) {
-			throw new Error('Invalid User ID');
+		const team = await TeamModel.findById(teamId);
+		if (!team) {
+			throw new UserInputError('Invalid Team ID');
+		}
+
+		if (!team.members.includes(user._id)) {
+			throw new ForbiddenError("Not authorized to edit resource")
+		}
+
+		const userModel = await UserModel.findById(userId);
+		if (!userModel) {
+			throw new UserInputError('Invalid User ID');
 		}
 
 		for (let i = 0; i < team.members.length; i++) {
-			if (team.members[i].toString() == user._id.toString()) {
+			if (team.members[i].toString() == userModel._id.toString()) {
 				team.members.splice(i, 1);
 				await team.save();
 				break;
 			}
 		}
-		for (let i = 0; i < user.teams.length; i++) {
-			if (user.teams[i].toString() == team._id.toString()) {
-				user.teams.splice(i, 1);
-				await user.save();
+		for (let i = 0; i < userModel.teams.length; i++) {
+			if (userModel.teams[i].toString() == team._id.toString()) {
+				userModel.teams.splice(i, 1);
+				await userModel.save();
 				break;
 			}
 		}

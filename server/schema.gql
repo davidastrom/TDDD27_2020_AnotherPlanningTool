@@ -29,6 +29,7 @@ input ListInput {
 }
 
 type Mutation {
+  addBoardMember(boardId: ObjectId!, userId: ObjectId!): Board!
   addList(list: ListInput!): List!
   addTask(task: TaskInput!): Board!
   addTeamMember(teamId: ObjectId!, userId: ObjectId!): Team!
@@ -38,6 +39,7 @@ type Mutation {
   createUser(user: UserInput!): User!
   moveList(boardId: ObjectId!, index: Int!, listId: ObjectId!): Board!
   moveTask(boardId: ObjectId!, goalListId: ObjectId!, index: Int!, startListId: ObjectId!, taskId: ObjectId!): Board!
+  removeBoardMember(boardId: ObjectId!, userId: ObjectId!): Board!
   removeTeamMember(teamId: ObjectId!, userId: ObjectId!): Team!
 }
 
@@ -45,8 +47,6 @@ type Mutation {
 scalar ObjectId
 
 type Query {
-  allBoards: [Board!]!
-  allTeams: [Team!]!
   allUsers: [User!]!
   board(boardId: ObjectId!): Board!
   currentUser: User!

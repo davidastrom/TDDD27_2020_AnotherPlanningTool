@@ -45,6 +45,7 @@ export type ListInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addBoardMember: Board;
   addList: List;
   addTask: Board;
   addTeamMember: Team;
@@ -54,7 +55,14 @@ export type Mutation = {
   createUser: User;
   moveList: Board;
   moveTask: Board;
+  removeBoardMember: Board;
   removeTeamMember: Team;
+};
+
+
+export type MutationAddBoardMemberArgs = {
+  boardId: Scalars['ObjectId'];
+  userId: Scalars['ObjectId'];
 };
 
 
@@ -114,6 +122,12 @@ export type MutationMoveTaskArgs = {
 };
 
 
+export type MutationRemoveBoardMemberArgs = {
+  boardId: Scalars['ObjectId'];
+  userId: Scalars['ObjectId'];
+};
+
+
 export type MutationRemoveTeamMemberArgs = {
   teamId: Scalars['ObjectId'];
   userId: Scalars['ObjectId'];
@@ -121,8 +135,6 @@ export type MutationRemoveTeamMemberArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  allBoards: Array<Board>;
-  allTeams: Array<Team>;
   allUsers: Array<User>;
   board: Board;
   currentUser: User;
