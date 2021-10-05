@@ -48,10 +48,10 @@ type Query {
   allBoards: [Board!]!
   allTeams: [Team!]!
   allUsers: [User!]!
-  board(boardId: ObjectId!): Board
-  currentUser: User
-  team(teamId: ObjectId!): Team
-  user(userId: ObjectId!): User
+  board(boardId: ObjectId!): Board!
+  currentUser: User!
+  team(teamId: ObjectId!): Team!
+  user(userId: ObjectId!): User!
 }
 
 """The Task model. Submodel of List"""

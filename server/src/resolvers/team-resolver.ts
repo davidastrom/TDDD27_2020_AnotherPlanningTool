@@ -15,12 +15,17 @@ import { TeamInput } from './types/team-input';
 
 import { User, UserModel } from '../entities/user';
 import { Board, BoardModel } from '../entities/board';
+import { UserInputError } from 'apollo-server-errors';
 
 @Resolver((of) => Team)
 export class TeamResolver {
-	@Query((returns) => Team, { nullable: true })
+	@Query((returns) => Team)
 	async team(@Arg('teamId', (type) => ObjectIdScalar) teamId: ObjectId) {
-		return await TeamModel.findById(teamId);
+		const team = await TeamModel.findById(teamId);
+		if (!team) {
+			throw new UserInputError('Invalid Team ID provided');
+		}
+		return team;
 	}
 
 	@Query((returns) => [Team])

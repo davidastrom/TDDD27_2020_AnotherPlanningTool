@@ -18,12 +18,17 @@ import { Team, TeamModel } from '../entities/team';
 import { User, UserModel } from '../entities/user';
 import { List, ListModel } from '../entities/list';
 import { ListInput } from './types/list-input';
+import { UserInputError } from 'apollo-server-errors';
 
 @Resolver((of) => Board)
 export class BoardResolver {
-	@Query((returns) => Board, { nullable: true })
+	@Query((returns) => Board)
 	async board(@Arg('boardId', (type) => ObjectIdScalar) boardId: ObjectId) {
-		return await BoardModel.findById(boardId);
+		const board = await BoardModel.findById(boardId);
+		if (!board) {
+			throw new UserInputError('Invalid Board ID provided');
+		}
+		return board;
 	}
 
 	@Query((returns) => [Board])
@@ -42,19 +47,19 @@ export class BoardResolver {
 			team: teamId,
 		} as Board);
 
-		const toDoList = new ListModel(({
+		const toDoList = new ListModel({
 			name: 'To Do',
 			items: [],
-		} as unknown) as List);
+		} as unknown as List);
 
-		const inProgressList = new ListModel(({
+		const inProgressList = new ListModel({
 			name: 'In Progress',
 			items: [],
-		} as unknown) as List);
+		} as unknown as List);
 
-		const doneList = new ListModel(({
+		const doneList = new ListModel({
 			name: 'Done',
-		} as unknown) as List);
+		} as unknown as List);
 
 		board.lists.push(toDoList);
 		board.lists.push(inProgressList);

@@ -1,4 +1,6 @@
 import { gql } from 'apollo-angular';
+import { Injectable } from '@angular/core';
+import * as Apollo from 'apollo-angular';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
@@ -122,10 +124,10 @@ export type Query = {
   allBoards: Array<Board>;
   allTeams: Array<Team>;
   allUsers: Array<User>;
-  board?: Maybe<Board>;
-  currentUser?: Maybe<User>;
-  team?: Maybe<Team>;
-  user?: Maybe<User>;
+  board: Board;
+  currentUser: User;
+  team: Team;
+  user: User;
 };
 
 
@@ -186,3 +188,58 @@ export type User = {
 export type UserInput = {
   email: Scalars['String'];
 };
+
+export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CurrentUserQuery = { __typename?: 'Query', currentUser: { __typename?: 'User', _id: string, email: string, username: string, picture: string } };
+
+export type UserByIdQueryVariables = Exact<{
+  id: Scalars['ObjectId'];
+}>;
+
+
+export type UserByIdQuery = { __typename?: 'Query', user: { __typename?: 'User', _id: string, email: string, username: string, picture: string } };
+
+export const CurrentUserDocument = gql`
+    query currentUser {
+  currentUser {
+    _id
+    email
+    username
+    picture
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CurrentUserGQL extends Apollo.Query<CurrentUserQuery, CurrentUserQueryVariables> {
+    document = CurrentUserDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UserByIdDocument = gql`
+    query userById($id: ObjectId!) {
+  user(userId: $id) {
+    _id
+    email
+    username
+    picture
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UserByIdGQL extends Apollo.Query<UserByIdQuery, UserByIdQueryVariables> {
+    document = UserByIdDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }

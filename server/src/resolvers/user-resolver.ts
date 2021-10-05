@@ -17,17 +17,25 @@ import { UserInput } from './types/user-input';
 import { Team, TeamModel } from '../entities/team';
 import { Board, BoardModel } from '../entities/board';
 import { Context } from '../interfaces/context';
+import { AuthenticationError, UserInputError } from 'apollo-server-errors';
 
 @Resolver((of) => User)
 export class UserResolver {
-	@Query((returns) => User, { nullable: true })
+	@Query((returns) => User)
 	async user(@Arg('userId', (type) => ObjectIdScalar) userId: ObjectId) {
-		return await UserModel.findById(userId);
+		const user = await UserModel.findById(userId);
+		if (!user) {
+			throw new UserInputError('Invalid User ID provided');
+		}
+		return user;
 	}
 
-	@Query((returns) => User, { nullable: true })
+	@Query((returns) => User)
 	async currentUser(@Ctx() { user }: Context) {
-		if (user) return await UserModel.findById(user.id);
+		if (!user) {
+			throw new AuthenticationError('No valid auth token provided');
+		}
+		return user;
 	}
 
 	@Query((returns) => [User])

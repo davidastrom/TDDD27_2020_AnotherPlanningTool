@@ -63,16 +63,16 @@ const main = async () => {
 			) {
 				token = req.headers.authorization.split(' ')[1];
 			}
+			console.log(token);
 
-			// Try to retrieve a user with the token
-			const user = await UserModel.getByToken(token);
-
-			if (!user) {
-				throw new AuthenticationError('Not logged in');
+			if (token) {
+				// Try to retrieve a user with the token
+				const user = await UserModel.getByToken(token);
+				// Add the user to the context
+				return { user };
 			}
 
-			// Add the user to the context
-			return { user };
+			return;
 		},
 	});
 
