@@ -5,7 +5,6 @@ import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, first, retry, take } from 'rxjs/operators';
 import { TokenService } from '../token/token.service';
-import { UserService } from '../user/user.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -23,8 +22,7 @@ export class AuthService {
 	constructor(
 		private socialAuthService: SocialAuthService,
 		private http: HttpClient,
-		private tokenService: TokenService,
-		private userService: UserService
+		private tokenService: TokenService
 	) {}
 
 	async signInWithGoogle() {
@@ -40,14 +38,12 @@ export class AuthService {
 			.subscribe((data) => {
 				console.log(data);
 				this.tokenService.saveToken(data.token);
-				this.userService.fetchUser();
 				this._signedIn.next(true);
 			});
 	}
 
 	signOut(): void {
 		this.tokenService.clearToken();
-		this.userService.clearUser();
 		this._signedIn.next(false);
 	}
 

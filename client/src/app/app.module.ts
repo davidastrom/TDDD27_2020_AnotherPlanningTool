@@ -23,6 +23,7 @@ import { httpInterceptorProviders } from './http-interceptors/http-interceptors'
 import { APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { InMemoryCache } from '@apollo/client/core';
+import { AuthService } from './services/auth/auth.service';
 
 const graphQlUri = environment.apiUrl + '/graphql'; // <-- add the URL of the GraphQL server here
 @NgModule({
@@ -57,12 +58,10 @@ const graphQlUri = environment.apiUrl + '/graphql'; // <-- add the URL of the Gr
 				],
 			} as SocialAuthServiceConfig,
 		},
+		AuthService,
 		{
 			provide: APOLLO_OPTIONS,
 			useFactory: (httpLink: HttpLink) => {
-				const http = httpLink.create({
-					uri: 'graphQlUri',
-				});
 				return {
 					cache: new InMemoryCache(),
 					link: httpLink.create({

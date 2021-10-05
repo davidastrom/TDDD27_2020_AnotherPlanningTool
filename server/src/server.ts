@@ -63,7 +63,6 @@ const main = async () => {
 			) {
 				token = req.headers.authorization.split(' ')[1];
 			}
-			console.log(token);
 
 			if (token) {
 				// Try to retrieve a user with the token

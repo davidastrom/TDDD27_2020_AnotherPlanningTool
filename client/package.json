@@ -3,12 +3,14 @@
 	"version": "0.0.0",
 	"scripts": {
 		"ng": "ng",
+		"start": "run-p start:local.dev graphql-codegen-watch",
 		"start:local.dev": "ng serve --configuration local.dev",
 		"start:docker.dev": "ng serve --configuration docker.dev",
 		"build": "ng build",
 		"watch": "ng build --watch --configuration development",
 		"test": "ng test",
-		"graphql-codegen": "graphql-codegen --config codegen.yml"
+		"graphql-codegen": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --config codegen.yml",
+		"graphql-codegen-watch": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --config codegen.yml --watch"
 	},
 	"private": true,
 	"dependencies": {
@@ -46,6 +48,7 @@
 		"@graphql-codegen/typescript-operations": "^2.1.6",
 		"@types/jasmine": "~3.8.0",
 		"@types/node": "^12.11.1",
+		"cross-env": "^7.0.3",
 		"jasmine-core": "~3.8.0",
 		"karma": "~6.3.0",
 		"karma-chrome-launcher": "~3.1.0",

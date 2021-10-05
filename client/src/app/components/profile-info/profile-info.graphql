@@ -1,0 +1,17 @@
+query currentUser {
+	currentUser {
+		_id
+		email
+		username
+		picture
+	}
+}
+
+query userById($id: ObjectId!) {
+	user(userId: $id) {
+		_id
+		email
+		username
+		picture
+	}
+}

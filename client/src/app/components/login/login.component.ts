@@ -4,7 +4,6 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { first } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { TokenService } from 'src/app/services/token/token.service';
-import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
 	selector: 'app-login',
@@ -14,11 +13,7 @@ import { UserService } from 'src/app/services/user/user.service';
 export class LoginComponent implements OnInit {
 	faGoogle = faGoogle;
 
-	constructor(
-		private authService: AuthService,
-		private userService: UserService,
-		private router: Router
-	) {}
+	constructor(private authService: AuthService, private router: Router) {}
 
 	ngOnInit(): void {}
 
