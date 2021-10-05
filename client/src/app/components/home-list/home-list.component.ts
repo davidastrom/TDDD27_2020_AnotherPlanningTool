@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-home-list',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home-list.component.scss']
 })
 export class HomeListComponent implements OnInit {
+  @Input() title = ''
+  @Input() list!: any[]
 
   constructor() { }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CurrentUserGQL, User } from 'src/generated/graphql';
@@ -9,15 +9,12 @@ import { CurrentUserGQL, User } from 'src/generated/graphql';
 	styleUrls: ['./profile-info.component.scss'],
 })
 export class ProfileInfoComponent implements OnInit {
-	user$: Observable<User> = new Observable<User>();
+	@Input()
+	user: any;
 
-	constructor(private currentUserGQL: CurrentUserGQL) {}
+	constructor() {}
 
 	ngOnInit(): void {
-		this.user$ = this.currentUserGQL.fetch().pipe(map((res) => {
-			console.log(res);
-			let data = res.data.currentUser;
-			return {...data, boards: [], teams: []}
-		}));
+		
 	}
 }

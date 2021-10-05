@@ -192,14 +192,14 @@ export type UserInput = {
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CurrentUserQuery = { __typename?: 'Query', currentUser: { __typename?: 'User', _id: string, email: string, username: string, picture?: string | null | undefined } };
+export type CurrentUserQuery = { __typename?: 'Query', currentUser: { __typename?: 'User', _id: string, email: string, username: string, picture?: string | null | undefined, boards: Array<{ __typename?: 'Board', _id: string, name: string }>, teams: Array<{ __typename?: 'Team', _id: string, name: string }> } };
 
 export type UserByIdQueryVariables = Exact<{
   id: Scalars['ObjectId'];
 }>;
 
 
-export type UserByIdQuery = { __typename?: 'Query', user: { __typename?: 'User', _id: string, email: string, username: string, picture?: string | null | undefined } };
+export type UserByIdQuery = { __typename?: 'Query', user: { __typename?: 'User', _id: string, email: string, username: string, picture?: string | null | undefined, boards: Array<{ __typename?: 'Board', _id: string, name: string }>, teams: Array<{ __typename?: 'Team', _id: string, name: string }> } };
 
 export const CurrentUserDocument = gql`
     query currentUser {
@@ -208,6 +208,14 @@ export const CurrentUserDocument = gql`
     email
     username
     picture
+    boards {
+      _id
+      name
+    }
+    teams {
+      _id
+      name
+    }
   }
 }
     `;
@@ -229,6 +237,14 @@ export const UserByIdDocument = gql`
     email
     username
     picture
+    boards {
+      _id
+      name
+    }
+    teams {
+      _id
+      name
+    }
   }
 }
     `;
