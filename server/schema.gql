@@ -36,7 +36,6 @@ type Mutation {
   assignUser(boardId: ObjectId!, listId: ObjectId!, taskId: ObjectId!, userId: ObjectId!): Task!
   createBoard(board: BoardInput!, teamId: ObjectId): Board!
   createTeam(data: TeamInput!): Team!
-  createUser(user: UserInput!): User!
   moveList(boardId: ObjectId!, index: Int!, listId: ObjectId!): Board!
   moveTask(boardId: ObjectId!, goalListId: ObjectId!, index: Int!, startListId: ObjectId!, taskId: ObjectId!): Board!
   removeBoardMember(boardId: ObjectId!, userId: ObjectId!): Board!
@@ -89,8 +88,4 @@ type User {
   picture: String
   teams: [Team!]!
   username: String!
-}
-
-input UserInput {
-  email: String!
 }

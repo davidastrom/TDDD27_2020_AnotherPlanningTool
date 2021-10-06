@@ -29,6 +29,10 @@ export class Team {
 	boards!: Ref<Board>[];
 
 	_doc: any;
+
+	public async isMember(this: Team, userId: ObjectId): Promise<boolean> {
+		return this.members.includes(userId);
+	}
 }
 
 export const TeamModel = getModelForClass(Team);

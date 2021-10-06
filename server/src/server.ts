@@ -20,6 +20,7 @@ import { Context } from './interfaces/context';
 import { ErrorInterceptor } from './middleware/error-interceptor';
 import GoogleAuthConfig from './auth/google-auth-config';
 import { UserModel } from './entities/user';
+import { graphqlAuthChecker } from './auth/graphql-auth-checker';
 
 const main = async () => {
 	/* Set up and connect to db */
@@ -49,6 +50,7 @@ const main = async () => {
 			TaskResolver,
 		],
 		emitSchemaFile: true,
+		authChecker: graphqlAuthChecker,
 		globalMiddlewares: [ErrorInterceptor],
 	});
 

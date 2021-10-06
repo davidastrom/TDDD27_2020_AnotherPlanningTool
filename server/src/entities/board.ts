@@ -8,7 +8,7 @@ import { ObjectId } from 'mongodb';
 
 import { Ref } from '../types';
 
-import { Team } from './team';
+import { Team, TeamModel } from './team';
 import { User } from './user';
 import { List } from './list';
 
@@ -34,6 +34,19 @@ export class Board {
 	lists!: List[];
 
 	_doc: any;
+
+	public async isMember(this: Board, userId: ObjectId): Promise<boolean> {
+		if (!this.members.includes(userId)) {
+			if (this.team) {
+				const team = await TeamModel.findById(this.team);
+				if (team) {
+					return team.isMember(userId); 
+				}
+			}
+			return false;
+		}
+		return true;
+	}
 }
 
 export const BoardModel = getModelForClass(Board);

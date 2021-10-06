@@ -52,7 +52,6 @@ export type Mutation = {
   assignUser: Task;
   createBoard: Board;
   createTeam: Team;
-  createUser: User;
   moveList: Board;
   moveTask: Board;
   removeBoardMember: Board;
@@ -98,11 +97,6 @@ export type MutationCreateBoardArgs = {
 
 export type MutationCreateTeamArgs = {
   data: TeamInput;
-};
-
-
-export type MutationCreateUserArgs = {
-  user: UserInput;
 };
 
 
@@ -195,10 +189,6 @@ export type User = {
   picture?: Maybe<Scalars['String']>;
   teams: Array<Team>;
   username: Scalars['String'];
-};
-
-export type UserInput = {
-  email: Scalars['String'];
 };
 
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;

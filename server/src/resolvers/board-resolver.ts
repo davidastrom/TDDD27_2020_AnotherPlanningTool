@@ -7,6 +7,7 @@ import {
 	Root,
 	Int,
 	Ctx,
+	Authorized,
 } from 'type-graphql';
 import { ObjectId } from 'mongodb';
 
@@ -24,25 +25,18 @@ import { Context } from '../interfaces/context';
 
 @Resolver((of) => Board)
 export class BoardResolver {
+	@Authorized()
 	@Query((returns) => Board)
 	async board(@Arg('boardId', (type) => ObjectIdScalar) boardId: ObjectId, @Ctx() { user }: Context) {
-		if (!user) {
-			throw new AuthenticationError("Not logged in")
-		}
 		const board = await BoardModel.findById(boardId);
 		if (!board) {
 			throw new UserInputError('Invalid Board ID provided');
 		}
-		if (!board.members.includes(user._id)) {
-			if (board.team) {
-				const team = await TeamModel.findById(board.team);
-				if (!team || !team.members.includes(user._id)) {
-					throw new ForbiddenError("Not authorized to view resource")
-				}
-			} else {
-				throw new ForbiddenError("Not authorized to view resource")
-			}
+
+		if (!board.isMember(user._id)) {
+			throw new ForbiddenError("Not authorized to view resource");
 		}
+		
 		return board;
 	}
 
@@ -51,16 +45,13 @@ export class BoardResolver {
 	// 	return await BoardModel.find();
 	// }
 
+	@Authorized()
 	@Mutation((returns) => Board)
 	async createBoard(
 		@Arg('board') boardInput: BoardInput,
 		@Arg('teamId', (type) => ObjectIdScalar, { nullable: true }) teamId: ObjectId,
 		@Ctx() { user }: Context
-	): Promise<Board> {
-		if (!user) {
-			throw new AuthenticationError("Not logged in")
-		}
-		
+	): Promise<Board> {		
 		const board = new BoardModel({
 			name: boardInput.name,
 			team: teamId,
@@ -93,30 +84,20 @@ export class BoardResolver {
 		return board;
 	}
 
+	@Authorized()
 	@Mutation(() => Board)
 	async addBoardMember(
 		@Arg('boardId', (type) => ObjectIdScalar) boardId: ObjectId,
 		@Arg('userId', (type) => ObjectIdScalar) userId: ObjectId,
 		@Ctx() { user }: Context
 	) {
-		if (!user) {
-			throw new AuthenticationError("Not logged in")
-		}
-
 		const board = await BoardModel.findById(boardId);
 		if (!board) {
 			throw new UserInputError('Invalid Board ID');
 		}
 
-		if (!board.members.includes(user._id)) {
-			if (board.team) {
-				const team = await TeamModel.findById(board.team);
-				if (!team || !team.members.includes(user._id)) {
-					throw new ForbiddenError("Not authorized to view resource")
-				}
-			} else {
-				throw new ForbiddenError("Not authorized to view resource")
-			}
+		if (!board.isMember(user._id)) {
+			throw new ForbiddenError("Not authorized to view resource");
 		}
 
 		const userModel = await UserModel.findById(userId);
@@ -141,30 +122,20 @@ export class BoardResolver {
 		return board;
 	}
 
+	@Authorized()
 	@Mutation(() => Board)
 	async removeBoardMember(
 		@Arg('boardId', (type) => ObjectIdScalar) boardId: ObjectId,
 		@Arg('userId', (type) => ObjectIdScalar) userId: ObjectId,
 		@Ctx() { user }: Context
 	) {
-		if (!user) {
-			throw new AuthenticationError("Not logged in")
-		}
-
 		const board = await BoardModel.findById(boardId);
 		if (!board) {
 			throw new UserInputError('Invalid Board ID');
 		}
 
-		if (!board.members.includes(user._id)) {
-			if (board.team) {
-				const team = await TeamModel.findById(board.team);
-				if (!team || !team.members.includes(user._id)) {
-					throw new ForbiddenError("Not authorized to view resource")
-				}
-			} else {
-				throw new ForbiddenError("Not authorized to view resource")
-			}
+		if (!board.isMember(user._id)) {
+			throw new ForbiddenError("Not authorized to view resource");
 		}
 
 		const userModel = await UserModel.findById(userId);
@@ -189,29 +160,19 @@ export class BoardResolver {
 		return board;
 	}
 
+	@Authorized()
 	@Mutation((returns) => List)
 	async addList(
 		@Arg('list') listInput: ListInput,
 		@Ctx() { user }: Context
 	) {
-		if (!user) {
-			throw new AuthenticationError("Not logged in")
-		}
-
 		const board = await BoardModel.findById(listInput.boardId);
 		if (!board) {
 			throw new Error('Invalid Board id');
 		}
 
-		if (!board.members.includes(user._id)) {
-			if (board.team) {
-				const team = await TeamModel.findById(board.team);
-				if (!team || !team.members.includes(user._id)) {
-					throw new ForbiddenError("Not authorized to view resource")
-				}
-			} else {
-				throw new ForbiddenError("Not authorized to view resource")
-			}
+		if (!board.isMember(user._id)) {
+			throw new ForbiddenError("Not authorized to view resource");
 		}
 
 		const list = new ListModel({
@@ -223,6 +184,7 @@ export class BoardResolver {
 		return await board.save();
 	}
 
+	@Authorized()
 	@Mutation((returns) => Board)
 	async moveList(
 		@Arg('boardId', (type) => ObjectIdScalar) boardId: ObjectId,
@@ -230,24 +192,13 @@ export class BoardResolver {
 		@Arg('index', (type) => Int) index: number,
 		@Ctx() { user }: Context
 	) {
-		if (!user) {
-			throw new AuthenticationError("Not logged in")
-		}
-
 		const board = await BoardModel.findById(boardId);
 		if (!board) {
 			throw new UserInputError('Invalid Board id');
 		}
 
-		if (!board.members.includes(user._id)) {
-			if (board.team) {
-				const team = await TeamModel.findById(board.team);
-				if (!team || !team.members.includes(user._id)) {
-					throw new ForbiddenError("Not authorized to view resource")
-				}
-			} else {
-				throw new ForbiddenError("Not authorized to view resource")
-			}
+		if (!board.isMember(user._id)) {
+			throw new ForbiddenError("Not authorized to view resource");
 		}
 
 		const listIndex = board.lists.findIndex(
@@ -262,6 +213,7 @@ export class BoardResolver {
 		return await board.save();
 	}
 
+	@Authorized()
 	@Mutation((returns) => Board)
 	async moveTask(
 		@Arg('boardId', (type) => ObjectIdScalar) boardId: ObjectId,
@@ -271,24 +223,13 @@ export class BoardResolver {
 		@Arg('index', (type) => Int) index: number,
 		@Ctx() { user }: Context
 	) {
-		if (!user) {
-			throw new AuthenticationError("Not logged in")
-		}
-
 		const board = await BoardModel.findById(boardId);
 		if (!board) {
 			throw new UserInputError('Invalid Board id');
 		}
 
-		if (!board.members.includes(user._id)) {
-			if (board.team) {
-				const team = await TeamModel.findById(board.team);
-				if (!team || !team.members.includes(user._id)) {
-					throw new ForbiddenError("Not authorized to view resource")
-				}
-			} else {
-				throw new ForbiddenError("Not authorized to view resource")
-			}
+		if (!board.isMember(user._id)) {
+			throw new ForbiddenError("Not authorized to view resource");
 		}
 
 		const startList = board.lists.find(

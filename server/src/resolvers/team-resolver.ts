@@ -6,6 +6,7 @@ import {
 	FieldResolver,
 	Root,
 	Ctx,
+	Authorized,
 } from 'type-graphql';
 import { ObjectId } from 'mongodb';
 
@@ -21,16 +22,14 @@ import { Context } from '../interfaces/context';
 
 @Resolver((of) => Team)
 export class TeamResolver {
+	@Authorized()
 	@Query((returns) => Team)
 	async team(@Arg('teamId', (type) => ObjectIdScalar) teamId: ObjectId, @Ctx() { user }: Context) {
-		if (!user) {
-			throw new AuthenticationError("Not logged in")
-		}
 		const team = await TeamModel.findById(teamId);
 		if (!team) {
 			throw new UserInputError('Invalid Team ID provided');
 		}
-		if (!team.members.includes(user._id)) {
+		if (!team.isMember(user._id)) {
 			throw new ForbiddenError("Not authorized to view resource")
 		}
 		return team;
@@ -41,11 +40,9 @@ export class TeamResolver {
 	// 	return await TeamModel.find();
 	// }
 
+	@Authorized()
 	@Mutation(() => Team)
 	async createTeam(@Arg('data') teamInput: TeamInput, @Ctx() { user }: Context): Promise<Team> {
-		if (!user) {
-			throw new AuthenticationError("Not logged in")
-		}
 		const team = new TeamModel({
 			...teamInput,
 			members: [user._id]
@@ -58,23 +55,20 @@ export class TeamResolver {
 		return team;
 	}
 
+	@Authorized()
 	@Mutation(() => Team)
 	async addTeamMember(
 		@Arg('teamId', (type) => ObjectIdScalar) teamId: ObjectId,
 		@Arg('userId', (type) => ObjectIdScalar) userId: ObjectId,
 		@Ctx() { user }: Context
 	) {
-		if (!user) {
-			throw new AuthenticationError("Not logged in")
-		}
-
 		const team = await TeamModel.findById(teamId);
 		if (!team) {
 			throw new UserInputError('Invalid Team ID');
 		}
 
-		if (!team.members.includes(user._id)) {
-			throw new ForbiddenError("Not authorized to edit resource")
+		if (!team.isMember(user._id)) {
+			throw new ForbiddenError("Not authorized to view resource")
 		}
 
 		const userModel = await UserModel.findById(userId);
@@ -99,23 +93,20 @@ export class TeamResolver {
 		return Team;
 	}
 
+	@Authorized()
 	@Mutation(() => Team)
 	async removeTeamMember(
 		@Arg('teamId', (type) => ObjectIdScalar) teamId: ObjectId,
 		@Arg('userId', (type) => ObjectIdScalar) userId: ObjectId,
 		@Ctx() { user }: Context
 	) {
-		if (!user) {
-			throw new AuthenticationError("Not logged in")
-		}
-
 		const team = await TeamModel.findById(teamId);
 		if (!team) {
 			throw new UserInputError('Invalid Team ID');
 		}
 
-		if (!team.members.includes(user._id)) {
-			throw new ForbiddenError("Not authorized to edit resource")
+		if (!team.isMember(user._id)) {
+			throw new ForbiddenError("Not authorized to view resource")
 		}
 
 		const userModel = await UserModel.findById(userId);
