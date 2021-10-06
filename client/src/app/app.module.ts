@@ -24,6 +24,7 @@ import { APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { InMemoryCache } from '@apollo/client/core';
 import { AuthService } from './services/auth/auth.service';
+import { FormsModule } from '@angular/forms';
 
 const graphQlUri = environment.apiUrl + '/graphql'; // <-- add the URL of the GraphQL server here
 @NgModule({
@@ -44,6 +45,7 @@ const graphQlUri = environment.apiUrl + '/graphql'; // <-- add the URL of the Gr
 		HttpClientModule,
 		FontAwesomeModule,
 		SocialLoginModule,
+		FormsModule,
 	],
 	providers: [
 		{

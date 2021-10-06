@@ -8,6 +8,7 @@ generates:
       - 'typescript'
       - 'typescript-operations'
       - 'typescript-apollo-angular'
+      - 'named-operations-object'
   ./graphql.schema.json:
     plugins:
       - 'introspection'

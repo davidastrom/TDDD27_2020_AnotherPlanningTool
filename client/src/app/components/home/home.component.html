@@ -1,11 +1,11 @@
 <div class="row">
 	<div class="col-2">
-		<app-profile-info [user]="user$ | async"></app-profile-info>
+		<app-profile-info [user]="(user$ | async)?.currentUser"></app-profile-info>
 	</div>
 	<div class="col-5">
-		<app-home-list [title]="'Boards'" [list]="(user$ | async)!.boards"></app-home-list>
+		<app-home-list [title]="'Board'" [list]="(user$ | async)?.currentUser?.boards ?? []" (newItemEvent)="addBoard($event)"></app-home-list>
 	</div>
 	<div class="col-5">
-		<app-home-list [title]="'Teams'" [list]="(user$ | async)!.teams"></app-home-list>
+		<app-home-list [title]="'Team'" [list]="(user$ | async)?.currentUser?.teams ?? []" (newItemEvent)="addTeam($event)"></app-home-list>
 	</div>
 </div>

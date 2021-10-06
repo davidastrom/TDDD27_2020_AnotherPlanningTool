@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-home-list',
@@ -7,11 +8,26 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class HomeListComponent implements OnInit {
   @Input() title = ''
-  @Input() list!: any[]
+  @Input() list: any[] = []
+  
+  @Output() newItemEvent = new EventEmitter<string>();
+
+  showAddForm = false;
+  newItemName = '';
+
+  faPlus = faPlus
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  addItem(): void {
+    this.newItemEvent.emit(this.newItemName);
+    this.toggleShowAddForm(false);
+  }
+
+  toggleShowAddForm(show: boolean) {
+    this.showAddForm = show
+  }
 }

@@ -43,6 +43,7 @@
 		"@angular/compiler-cli": "~12.1.0-",
 		"@graphql-codegen/cli": "2.2.0",
 		"@graphql-codegen/introspection": "^2.1.0",
+		"@graphql-codegen/named-operations-object": "^2.1.0",
 		"@graphql-codegen/typescript": "^2.2.2",
 		"@graphql-codegen/typescript-apollo-angular": "^3.2.0",
 		"@graphql-codegen/typescript-operations": "^2.1.6",

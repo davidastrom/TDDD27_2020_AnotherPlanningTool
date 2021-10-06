@@ -31,3 +31,17 @@ query userById($id: ObjectId!) {
 		}
 	}
 }
+
+mutation createBoard($input: BoardInput!) {
+	createBoard(board: $input) {
+		_id
+		name
+	}
+}
+
+mutation createTeam($input: TeamInput!) {
+	createTeam(data: $input) {
+		_id
+		name
+	}
+}
