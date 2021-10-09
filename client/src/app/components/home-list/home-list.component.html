@@ -1,8 +1,8 @@
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">{{ title }}s</h5>
+        <h4 class="card-title">{{ title }}s</h4>
         <div class="list-group">
-            <a *ngFor="let item of list" class="list-group-item">{{ item.name }}</a>
+            <app-home-list-item *ngFor="let item of list" [item]="item" [url]="getUrl(item._id)" [showMemberCount]="showMemberCount"></app-home-list-item>
         </div>
         <div class="card" *ngIf="showAddForm">
             <div class="card-body">

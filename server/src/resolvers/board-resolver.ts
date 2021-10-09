@@ -16,7 +16,7 @@ import { ObjectIdScalar } from '../object-id.scalar';
 import { Board, BoardModel } from '../entities/board';
 import { BoardInput } from './types/board-input';
 
-import { TeamModel } from '../entities/team';
+import { Team, TeamModel } from '../entities/team';
 import { User, UserModel } from '../entities/user';
 import { List, ListModel } from '../entities/list';
 import { ListInput } from './types/list-input';
@@ -52,11 +52,21 @@ export class BoardResolver {
 		@Arg('teamId', (type) => ObjectIdScalar, { nullable: true }) teamId: ObjectId,
 		@Ctx() { user }: Context
 	): Promise<Board> {		
-		const board = new BoardModel({
-			name: boardInput.name,
-			team: teamId,
-			members: [user._id]
-		} as Board);
+		let team;
+		if (teamId) {
+			team = await TeamModel.findById(teamId);
+			if (!team) {
+				throw new UserInputError("Invalid Team ID provided");
+			}
+		}
+		const board = teamId ? new BoardModel({
+				name: boardInput.name,
+				team: teamId
+			} as Board) : 
+			new BoardModel({
+				name: boardInput.name,
+				members: [user._id]
+			} as Board);
 
 		const toDoList = new ListModel({
 			name: 'To Do',
@@ -76,10 +86,15 @@ export class BoardResolver {
 		board.lists.push(inProgressList);
 		board.lists.push(doneList);
 
-		user.boards.push(board._id)
-
 		await board.save();
-		await user.save();
+
+		if (team) {
+			team.boards.push(board._id);
+			await team.save();
+		} else {
+			user.boards.push(board._id)
+			await user.save();
+		}
 
 		return board;
 	}

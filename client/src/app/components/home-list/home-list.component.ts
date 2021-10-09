@@ -9,6 +9,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 export class HomeListComponent implements OnInit {
   @Input() title = ''
   @Input() list: any[] = []
+  @Input() showMemberCount: boolean;
   
   @Output() newItemEvent = new EventEmitter<string>();
 
@@ -29,5 +30,9 @@ export class HomeListComponent implements OnInit {
 
   toggleShowAddForm(show: boolean) {
     this.showAddForm = show
+  }
+
+  getUrl(id: string) {
+    return `/${this.title.toLowerCase()}/${id}`
   }
 }

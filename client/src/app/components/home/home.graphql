@@ -7,10 +7,16 @@ query currentUser {
 		boards {
 			_id
 			name
+			members {
+				_id
+			}
 		}
 		teams {
 			_id
 			name
+			members {
+				_id
+			}
 		}
 	}
 }
@@ -24,16 +30,22 @@ query userById($id: ObjectId!) {
 		boards {
 			_id
 			name
+			members {
+				_id
+			}
 		}
 		teams {
 			_id
 			name
+			members {
+				_id
+			}
 		}
 	}
 }
 
-mutation createBoard($input: BoardInput!) {
-	createBoard(board: $input) {
+mutation createBoard($input: BoardInput!, $teamId: ObjectId) {
+	createBoard(board: $input, teamId: $teamId) {
 		_id
 		name
 	}

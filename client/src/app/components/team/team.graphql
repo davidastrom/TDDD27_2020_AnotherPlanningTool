@@ -1,0 +1,14 @@
+query getTeam($id: ObjectId!) {
+    team(teamId: $id) {
+        name
+        members {
+            _id
+            username
+            picture
+        }
+        boards {
+            _id
+            name
+        }
+    }
+}

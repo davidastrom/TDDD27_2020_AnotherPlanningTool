@@ -194,17 +194,18 @@ export type User = {
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CurrentUserQuery = { __typename?: 'Query', currentUser: { __typename?: 'User', _id: string, email: string, username: string, picture?: string | null | undefined, boards: Array<{ __typename?: 'Board', _id: string, name: string }>, teams: Array<{ __typename?: 'Team', _id: string, name: string }> } };
+export type CurrentUserQuery = { __typename?: 'Query', currentUser: { __typename?: 'User', _id: string, email: string, username: string, picture?: string | null | undefined, boards: Array<{ __typename?: 'Board', _id: string, name: string, members: Array<{ __typename?: 'User', _id: string }> }>, teams: Array<{ __typename?: 'Team', _id: string, name: string, members: Array<{ __typename?: 'User', _id: string }> }> } };
 
 export type UserByIdQueryVariables = Exact<{
   id: Scalars['ObjectId'];
 }>;
 
 
-export type UserByIdQuery = { __typename?: 'Query', user: { __typename?: 'User', _id: string, email: string, username: string, picture?: string | null | undefined, boards: Array<{ __typename?: 'Board', _id: string, name: string }>, teams: Array<{ __typename?: 'Team', _id: string, name: string }> } };
+export type UserByIdQuery = { __typename?: 'Query', user: { __typename?: 'User', _id: string, email: string, username: string, picture?: string | null | undefined, boards: Array<{ __typename?: 'Board', _id: string, name: string, members: Array<{ __typename?: 'User', _id: string }> }>, teams: Array<{ __typename?: 'Team', _id: string, name: string, members: Array<{ __typename?: 'User', _id: string }> }> } };
 
 export type CreateBoardMutationVariables = Exact<{
   input: BoardInput;
+  teamId?: Maybe<Scalars['ObjectId']>;
 }>;
 
 
@@ -217,6 +218,13 @@ export type CreateTeamMutationVariables = Exact<{
 
 export type CreateTeamMutation = { __typename?: 'Mutation', createTeam: { __typename?: 'Team', _id: string, name: string } };
 
+export type GetTeamQueryVariables = Exact<{
+  id: Scalars['ObjectId'];
+}>;
+
+
+export type GetTeamQuery = { __typename?: 'Query', team: { __typename?: 'Team', name: string, members: Array<{ __typename?: 'User', _id: string, username: string, picture?: string | null | undefined }>, boards: Array<{ __typename?: 'Board', _id: string, name: string }> } };
+
 export const CurrentUserDocument = gql`
     query currentUser {
   currentUser {
@@ -227,10 +235,16 @@ export const CurrentUserDocument = gql`
     boards {
       _id
       name
+      members {
+        _id
+      }
     }
     teams {
       _id
       name
+      members {
+        _id
+      }
     }
   }
 }
@@ -256,10 +270,16 @@ export const UserByIdDocument = gql`
     boards {
       _id
       name
+      members {
+        _id
+      }
     }
     teams {
       _id
       name
+      members {
+        _id
+      }
     }
   }
 }
@@ -276,8 +296,8 @@ export const UserByIdDocument = gql`
     }
   }
 export const CreateBoardDocument = gql`
-    mutation createBoard($input: BoardInput!) {
-  createBoard(board: $input) {
+    mutation createBoard($input: BoardInput!, $teamId: ObjectId) {
+  createBoard(board: $input, teamId: $teamId) {
     _id
     name
   }
@@ -313,10 +333,38 @@ export const CreateTeamDocument = gql`
       super(apollo);
     }
   }
+export const GetTeamDocument = gql`
+    query getTeam($id: ObjectId!) {
+  team(teamId: $id) {
+    name
+    members {
+      _id
+      username
+      picture
+    }
+    boards {
+      _id
+      name
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetTeamGQL extends Apollo.Query<GetTeamQuery, GetTeamQueryVariables> {
+    document = GetTeamDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const namedOperations = {
   Query: {
     currentUser: 'currentUser',
-    userById: 'userById'
+    userById: 'userById',
+    getTeam: 'getTeam'
   },
   Mutation: {
     createBoard: 'createBoard',
