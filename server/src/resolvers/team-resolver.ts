@@ -62,6 +62,7 @@ export class TeamResolver {
 		@Arg('userId', (type) => ObjectIdScalar) userId: ObjectId,
 		@Ctx() { user }: Context
 	) {
+
 		const team = await TeamModel.findById(teamId);
 		if (!team) {
 			throw new UserInputError('Invalid Team ID');
@@ -76,21 +77,14 @@ export class TeamResolver {
 			throw new UserInputError('Invalid User ID');
 		}
 
-		let userInMember: boolean = false;
-
-		for (let id of team.members) {
-			if (id.toString() == userModel._id.toString()) {
-				userInMember = true;
-			}
-		}
-		if (!userInMember) {
+		if (!team.isMember(userModel._id)) {
 			team.members.push(userModel._id);
 			userModel.teams.push(team._id);
 			await team.save();
 			await userModel.save();
 		}
 
-		return Team;
+		return team;
 	}
 
 	@Authorized()
@@ -117,17 +111,19 @@ export class TeamResolver {
 		for (let i = 0; i < team.members.length; i++) {
 			if (team.members[i].toString() == userModel._id.toString()) {
 				team.members.splice(i, 1);
-				await team.save();
 				break;
 			}
 		}
 		for (let i = 0; i < userModel.teams.length; i++) {
 			if (userModel.teams[i].toString() == team._id.toString()) {
+				console.log("remove")
 				userModel.teams.splice(i, 1);
-				await userModel.save();
 				break;
 			}
 		}
+		await team.save();
+		await userModel.save();
+
 		return team;
 	}
 

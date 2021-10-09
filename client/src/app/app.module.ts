@@ -28,6 +28,7 @@ import { FormsModule } from '@angular/forms';
 import { TeamComponent } from './components/team/team.component';
 import { BoardComponent } from './components/board/board.component';
 import { MemberListComponent } from './components/member-list/member-list.component';
+import { MemberListItemComponent } from './components/member-list-item/member-list-item.component';
 
 const graphQlUri = environment.apiUrl + '/graphql'; // <-- add the URL of the GraphQL server here
 @NgModule({
@@ -43,6 +44,7 @@ const graphQlUri = environment.apiUrl + '/graphql'; // <-- add the URL of the Gr
   TeamComponent,
   BoardComponent,
   MemberListComponent,
+  MemberListItemComponent,
 	],
 	imports: [
 		BrowserModule,

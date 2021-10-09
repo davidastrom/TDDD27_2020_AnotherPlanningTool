@@ -218,12 +218,33 @@ export type CreateTeamMutationVariables = Exact<{
 
 export type CreateTeamMutation = { __typename?: 'Mutation', createTeam: { __typename?: 'Team', _id: string, name: string } };
 
+export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllUsersQuery = { __typename?: 'Query', allUsers: Array<{ __typename?: 'User', _id: string, username: string }> };
+
 export type GetTeamQueryVariables = Exact<{
   id: Scalars['ObjectId'];
 }>;
 
 
 export type GetTeamQuery = { __typename?: 'Query', team: { __typename?: 'Team', name: string, members: Array<{ __typename?: 'User', _id: string, username: string, picture?: string | null | undefined }>, boards: Array<{ __typename?: 'Board', _id: string, name: string }> } };
+
+export type AddTeamMemberMutationVariables = Exact<{
+  userId: Scalars['ObjectId'];
+  teamId: Scalars['ObjectId'];
+}>;
+
+
+export type AddTeamMemberMutation = { __typename?: 'Mutation', addTeamMember: { __typename?: 'Team', _id: string } };
+
+export type RemoveTeamMemberMutationVariables = Exact<{
+  userId: Scalars['ObjectId'];
+  teamId: Scalars['ObjectId'];
+}>;
+
+
+export type RemoveTeamMemberMutation = { __typename?: 'Mutation', removeTeamMember: { __typename?: 'Team', _id: string } };
 
 export const CurrentUserDocument = gql`
     query currentUser {
@@ -333,6 +354,25 @@ export const CreateTeamDocument = gql`
       super(apollo);
     }
   }
+export const GetAllUsersDocument = gql`
+    query getAllUsers {
+  allUsers {
+    _id
+    username
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetAllUsersGQL extends Apollo.Query<GetAllUsersQuery, GetAllUsersQueryVariables> {
+    document = GetAllUsersDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const GetTeamDocument = gql`
     query getTeam($id: ObjectId!) {
   team(teamId: $id) {
@@ -360,14 +400,53 @@ export const GetTeamDocument = gql`
       super(apollo);
     }
   }
+export const AddTeamMemberDocument = gql`
+    mutation addTeamMember($userId: ObjectId!, $teamId: ObjectId!) {
+  addTeamMember(userId: $userId, teamId: $teamId) {
+    _id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddTeamMemberGQL extends Apollo.Mutation<AddTeamMemberMutation, AddTeamMemberMutationVariables> {
+    document = AddTeamMemberDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const RemoveTeamMemberDocument = gql`
+    mutation removeTeamMember($userId: ObjectId!, $teamId: ObjectId!) {
+  removeTeamMember(userId: $userId, teamId: $teamId) {
+    _id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class RemoveTeamMemberGQL extends Apollo.Mutation<RemoveTeamMemberMutation, RemoveTeamMemberMutationVariables> {
+    document = RemoveTeamMemberDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const namedOperations = {
   Query: {
     currentUser: 'currentUser',
     userById: 'userById',
+    getAllUsers: 'getAllUsers',
     getTeam: 'getTeam'
   },
   Mutation: {
     createBoard: 'createBoard',
-    createTeam: 'createTeam'
+    createTeam: 'createTeam',
+    addTeamMember: 'addTeamMember',
+    removeTeamMember: 'removeTeamMember'
   }
 }

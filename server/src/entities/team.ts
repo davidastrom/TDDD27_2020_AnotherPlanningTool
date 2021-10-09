@@ -30,7 +30,7 @@ export class Team {
 
 	_doc: any;
 
-	public async isMember(this: Team, userId: ObjectId): Promise<boolean> {
+	public isMember(this: Team, userId: ObjectId): boolean {
 		return this.members.includes(userId);
 	}
 }

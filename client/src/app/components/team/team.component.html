@@ -1,11 +1,13 @@
 <div class="row">
-    <div class="col-2">
-
+    <div class="col-12">
+        <h3>{{ (team$ | async)?.team?.name }}</h3>
     </div>
-    <div class="col-5">
-        <app-home-list [title]="'Board'" [list]="(team$ | async)?.team?.boards ?? []" [showMemberCount]="false" (newItemEvent)="addBoard($event)"></app-home-list>
+</div>
+<div class="row">
+    <div class="col-6">
+        <app-home-list title="Board" [list]="(team$ | async)?.team?.boards ?? []" [showMemberCount]="false" (newItemEvent)="addBoard($event)"></app-home-list>
     </div>
-    <div class="col-5">
-        
+    <div class="col-6">
+        <app-member-list [list]="(team$ | async)?.team?.members ?? []"  (newMemberEvent)="addMember($event)" (removeMemberEvent)="removeMember($event)"></app-member-list>
     </div>
 </div>

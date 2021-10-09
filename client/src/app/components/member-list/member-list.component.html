@@ -1,1 +1,24 @@
-<p>member-list works!</p>
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Members</h4>
+        <div class="list-group">
+            <app-member-list-item *ngFor="let item of list" [item]="item" (remove)="removeMember($event)"></app-member-list-item>
+        </div>
+        <div class="card" *ngIf="showAddForm">
+            <div class="card-body">
+                <h5 class="card-title">Add new member</h5>
+                <div class="form-group">
+                    <label for="new-member-search">Find user</label>
+                    <input type="text" class="form-control" id="new-member-search" [(ngModel)]="newMember" [ngbTypeahead]="search" [inputFormatter]="formatter" [resultFormatter]="formatter" [editable]='false'>
+                </div>
+                <div class="form-inline text-right">
+                    <button type="button" class="btn btn-secondary mr-2" (click)="toggleShowAddForm(false)">Cancel</button>
+                    <button type="button" class="btn btn-primary" (click)="addMember()"><fa-icon class="mr-2" [icon]="faPlus"></fa-icon>Add</button>
+                </div>
+            </div>
+        </div>
+        <button *ngIf="!showAddForm" type="button" class="btn btn-secondary mt-3" (click)="toggleShowAddForm(true)"><fa-icon class="mr-2" [icon]="faPlus"></fa-icon>
+            Add member
+        </button>
+    </div>
+</div>

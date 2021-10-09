@@ -12,3 +12,15 @@ query getTeam($id: ObjectId!) {
         }
     }
 }
+
+mutation addTeamMember($userId: ObjectId!, $teamId: ObjectId!) {
+    addTeamMember(userId: $userId, teamId: $teamId) {
+        _id
+    }
+}
+
+mutation removeTeamMember($userId: ObjectId!, $teamId: ObjectId!) {
+    removeTeamMember(userId: $userId, teamId: $teamId) {
+        _id
+    }
+}
