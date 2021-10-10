@@ -5,7 +5,11 @@ import { Board, BoardModel } from '../entities/board';
 import { Task, TaskModel } from '../entities/task';
 import { TaskInput } from './types/task-input';
 import { Context } from '../interfaces/context';
-import { AuthenticationError, ForbiddenError, UserInputError } from 'apollo-server-errors';
+import {
+	AuthenticationError,
+	ForbiddenError,
+	UserInputError,
+} from 'apollo-server-errors';
 
 @Resolver((of) => List)
 export class ListResolver {
@@ -18,11 +22,11 @@ export class ListResolver {
 		}
 
 		if (!board.isMember(user._id)) {
-			throw new ForbiddenError("Not authorized to view resource");
+			throw new ForbiddenError('Not authorized to view resource');
 		}
 
 		const list = board.lists.find(
-			(list) => list._id.toHexString() == taskInput.listId.toHexString(),
+			(list) => list._id.toString() == taskInput.listId.toString()
 		);
 		if (!list) {
 			throw new UserInputError('Invalid List id');

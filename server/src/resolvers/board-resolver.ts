@@ -20,23 +20,30 @@ import { Team, TeamModel } from '../entities/team';
 import { User, UserModel } from '../entities/user';
 import { List, ListModel } from '../entities/list';
 import { ListInput } from './types/list-input';
-import { AuthenticationError, UserInputError, ForbiddenError } from 'apollo-server-errors';
+import {
+	AuthenticationError,
+	UserInputError,
+	ForbiddenError,
+} from 'apollo-server-errors';
 import { Context } from '../interfaces/context';
 
 @Resolver((of) => Board)
 export class BoardResolver {
 	@Authorized()
 	@Query((returns) => Board)
-	async board(@Arg('boardId', (type) => ObjectIdScalar) boardId: ObjectId, @Ctx() { user }: Context) {
+	async board(
+		@Arg('boardId', (type) => ObjectIdScalar) boardId: ObjectId,
+		@Ctx() { user }: Context
+	) {
 		const board = await BoardModel.findById(boardId);
 		if (!board) {
 			throw new UserInputError('Invalid Board ID provided');
 		}
 
 		if (!board.isMember(user._id)) {
-			throw new ForbiddenError("Not authorized to view resource");
+			throw new ForbiddenError('Not authorized to view resource');
 		}
-		
+
 		return board;
 	}
 
@@ -49,24 +56,26 @@ export class BoardResolver {
 	@Mutation((returns) => Board)
 	async createBoard(
 		@Arg('board') boardInput: BoardInput,
-		@Arg('teamId', (type) => ObjectIdScalar, { nullable: true }) teamId: ObjectId,
+		@Arg('teamId', (type) => ObjectIdScalar, { nullable: true })
+		teamId: ObjectId,
 		@Ctx() { user }: Context
-	): Promise<Board> {		
+	): Promise<Board> {
 		let team;
 		if (teamId) {
 			team = await TeamModel.findById(teamId);
 			if (!team) {
-				throw new UserInputError("Invalid Team ID provided");
+				throw new UserInputError('Invalid Team ID provided');
 			}
 		}
-		const board = teamId ? new BoardModel({
-				name: boardInput.name,
-				team: teamId
-			} as Board) : 
-			new BoardModel({
-				name: boardInput.name,
-				members: [user._id]
-			} as Board);
+		const board = teamId
+			? new BoardModel({
+					name: boardInput.name,
+					team: teamId,
+			  } as Board)
+			: new BoardModel({
+					name: boardInput.name,
+					members: [user._id],
+			  } as Board);
 
 		const toDoList = new ListModel({
 			name: 'To Do',
@@ -92,7 +101,7 @@ export class BoardResolver {
 			team.boards.push(board._id);
 			await team.save();
 		} else {
-			user.boards.push(board._id)
+			user.boards.push(board._id);
 			await user.save();
 		}
 
@@ -112,7 +121,7 @@ export class BoardResolver {
 		}
 
 		if (!board.isMember(user._id)) {
-			throw new ForbiddenError("Not authorized to view resource");
+			throw new ForbiddenError('Not authorized to view resource');
 		}
 
 		const userModel = await UserModel.findById(userId);
@@ -150,7 +159,7 @@ export class BoardResolver {
 		}
 
 		if (!board.isMember(user._id)) {
-			throw new ForbiddenError("Not authorized to view resource");
+			throw new ForbiddenError('Not authorized to view resource');
 		}
 
 		const userModel = await UserModel.findById(userId);
@@ -177,17 +186,14 @@ export class BoardResolver {
 
 	@Authorized()
 	@Mutation((returns) => List)
-	async addList(
-		@Arg('list') listInput: ListInput,
-		@Ctx() { user }: Context
-	) {
+	async addList(@Arg('list') listInput: ListInput, @Ctx() { user }: Context) {
 		const board = await BoardModel.findById(listInput.boardId);
 		if (!board) {
 			throw new Error('Invalid Board id');
 		}
 
 		if (!board.isMember(user._id)) {
-			throw new ForbiddenError("Not authorized to view resource");
+			throw new ForbiddenError('Not authorized to view resource');
 		}
 
 		const list = new ListModel({
@@ -213,11 +219,11 @@ export class BoardResolver {
 		}
 
 		if (!board.isMember(user._id)) {
-			throw new ForbiddenError("Not authorized to view resource");
+			throw new ForbiddenError('Not authorized to view resource');
 		}
 
 		const listIndex = board.lists.findIndex(
-			(list) => list._id.toHexString() == listId.toHexString()
+			(list) => list._id.toString() == listId.toString()
 		);
 		if (!listIndex) {
 			throw new UserInputError('Invalid List id');
@@ -244,25 +250,25 @@ export class BoardResolver {
 		}
 
 		if (!board.isMember(user._id)) {
-			throw new ForbiddenError("Not authorized to view resource");
+			throw new ForbiddenError('Not authorized to view resource');
 		}
 
 		const startList = board.lists.find(
-			(list) => list._id.toHexString() == startId.toHexString()
+			(list) => list._id.toString() == startId.toString()
 		);
 		if (!startList) {
 			throw new UserInputError('Invalid Startlist id');
 		}
 
 		const goalList = board.lists.find(
-			(list) => list._id.toHexString() == goalId.toHexString()
+			(list) => list._id.toString() == goalId.toString()
 		);
 		if (!goalList) {
 			throw new UserInputError('Invalid Goallist id');
 		}
 
 		const startIndex = startList.items.findIndex(
-			(task) => task._id.toHexString() == taskId.toHexString()
+			(task) => task._id.toString() == taskId.toString()
 		);
 		if (!startIndex) {
 			throw new UserInputError('Invalid Task id');

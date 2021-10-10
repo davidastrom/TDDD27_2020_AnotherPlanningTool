@@ -23,9 +23,9 @@ export class Task {
 	@Property()
 	description?: string;
 
-	@Field((type) => [User])
-	@ArrayProperty({ ref: 'User' })
-	assigned!: Ref<User>[];
+	@Field((type) => User, { nullable: true })
+	@Property({ ref: 'User' })
+	assigned?: Ref<User>;
 
 	_doc: any;
 }

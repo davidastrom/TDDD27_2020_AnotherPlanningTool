@@ -1,4 +1,12 @@
-import { Resolver, Mutation, Root, FieldResolver, Arg, Ctx, Authorized } from 'type-graphql';
+import {
+	Resolver,
+	Mutation,
+	Root,
+	FieldResolver,
+	Arg,
+	Ctx,
+	Authorized,
+} from 'type-graphql';
 import { ObjectId } from 'mongodb';
 import { ObjectIdScalar } from '../object-id.scalar';
 import { Task } from '../entities/task';
@@ -8,60 +16,50 @@ import { Board, BoardModel } from '../entities/board';
 import { Team, TeamModel } from '../entities/team';
 import { Context } from '../interfaces/context';
 import { AuthenticationError, UserInputError } from 'apollo-server-errors';
+import { AssignUserInput } from './types/task-input';
 
 @Resolver((of) => Task)
 export class TaskResolver {
 	@Authorized()
 	@Mutation((returns) => Task)
 	async assignUser(
-		@Arg('boardId', (type) => ObjectIdScalar) boardId: ObjectId,
-		@Arg('listId', (type) => ObjectIdScalar) listId: ObjectId,
-		@Arg('taskId', (type) => ObjectIdScalar) taskId: ObjectId,
-		@Arg('userId', (tyep) => ObjectIdScalar) userId: ObjectId,
+		@Arg('input') input: AssignUserInput,
 		@Ctx() { user }: Context
-	) {		
-		const board = await BoardModel.findById(boardId);
+	) {
+		const board = await BoardModel.findById(input.boardId);
 		if (!board) {
 			throw new UserInputError('Invalid Board id');
 		}
 
-
-		if (!board.isMember(userId)) {
-			throw new UserInputError("User not member of board");
+		if (input.userId) {
+			if (!board.isMember(input.userId)) {
+				throw new UserInputError('User not member of board');
+			}
 		}
 
 		const list = board.lists.find(
-			(list) => list._id.toHexString() == listId.toHexString(),
+			(list) => list._id.toString() == input.listId.toString()
 		);
 		if (!list) {
 			throw new UserInputError('Invalid List id');
 		}
 
 		const task = list.items.find(
-			(task) => task._id.toHexString() == taskId.toHexString(),
+			(task) => task._id.toString() == input.taskId.toString()
 		);
 		if (!task) {
 			throw new UserInputError('Invalid Task id');
 		}
 
-		if (!task.assigned.find((id) => id.toString() == userId.toString())) {
-			task.assigned.push(userId);
-		}
+		task.assigned = input.userId;
 
 		await board.save();
 
 		return task;
 	}
 
-	@FieldResolver()
-	async assigned(@Root() task: Task): Promise<User[]> {
-		let assigned: User[] = [];
-		for (let userId of task._doc.assigned) {
-			let user = await UserModel.findById(userId);
-			if (user) {
-				assigned.push(user);
-			}
-		}
-		return assigned;
+	@FieldResolver({ nullable: true })
+	async assigned(@Root() task: Task) {
+		return await UserModel.findById(task._doc.assigned);
 	}
 }

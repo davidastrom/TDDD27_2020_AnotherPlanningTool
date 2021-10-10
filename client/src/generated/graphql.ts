@@ -16,6 +16,13 @@ export type Scalars = {
   ObjectId: any;
 };
 
+export type AssignUserInput = {
+  boardId: Scalars['ID'];
+  listId: Scalars['ID'];
+  taskId: Scalars['ID'];
+  userId?: Maybe<Scalars['ID']>;
+};
+
 /** The Board model */
 export type Board = {
   __typename?: 'Board';
@@ -82,10 +89,7 @@ export type MutationAddTeamMemberArgs = {
 
 
 export type MutationAssignUserArgs = {
-  boardId: Scalars['ObjectId'];
-  listId: Scalars['ObjectId'];
-  taskId: Scalars['ObjectId'];
-  userId: Scalars['ObjectId'];
+  input: AssignUserInput;
 };
 
 
@@ -155,7 +159,7 @@ export type QueryUserArgs = {
 export type Task = {
   __typename?: 'Task';
   _id: Scalars['ID'];
-  assigned: Array<User>;
+  assigned?: Maybe<User>;
   description?: Maybe<Scalars['String']>;
   title: Scalars['String'];
 };
@@ -190,6 +194,34 @@ export type User = {
   teams: Array<Team>;
   username: Scalars['String'];
 };
+
+export type GetBoardQueryVariables = Exact<{
+  boardId: Scalars['ObjectId'];
+}>;
+
+
+export type GetBoardQuery = { __typename?: 'Query', board: { __typename?: 'Board', _id: string, name: string, members: Array<{ __typename?: 'User', _id: string, username: string, picture?: string | null | undefined }>, lists: Array<{ __typename?: 'List', _id: string, name: string, items: Array<{ __typename?: 'Task', _id: string, title: string, description?: string | null | undefined, assigned?: { __typename?: 'User', _id: string, username: string, picture?: string | null | undefined } | null | undefined }> }>, team?: { __typename?: 'Team', members: Array<{ __typename?: 'User', _id: string, username: string, picture?: string | null | undefined }> } | null | undefined } };
+
+export type AddTaskMutationVariables = Exact<{
+  taskInput: TaskInput;
+}>;
+
+
+export type AddTaskMutation = { __typename?: 'Mutation', addTask: { __typename?: 'Board', _id: string } };
+
+export type AddListMutationVariables = Exact<{
+  listInput: ListInput;
+}>;
+
+
+export type AddListMutation = { __typename?: 'Mutation', addList: { __typename?: 'List', _id: string } };
+
+export type AssignUserMutationVariables = Exact<{
+  input: AssignUserInput;
+}>;
+
+
+export type AssignUserMutation = { __typename?: 'Mutation', assignUser: { __typename?: 'Task', _id: string } };
 
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -246,6 +278,105 @@ export type RemoveTeamMemberMutationVariables = Exact<{
 
 export type RemoveTeamMemberMutation = { __typename?: 'Mutation', removeTeamMember: { __typename?: 'Team', _id: string } };
 
+export const GetBoardDocument = gql`
+    query getBoard($boardId: ObjectId!) {
+  board(boardId: $boardId) {
+    _id
+    name
+    members {
+      _id
+      username
+      picture
+    }
+    lists {
+      _id
+      name
+      items {
+        _id
+        title
+        description
+        assigned {
+          _id
+          username
+          picture
+        }
+      }
+    }
+    team {
+      members {
+        _id
+        username
+        picture
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetBoardGQL extends Apollo.Query<GetBoardQuery, GetBoardQueryVariables> {
+    document = GetBoardDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AddTaskDocument = gql`
+    mutation addTask($taskInput: TaskInput!) {
+  addTask(task: $taskInput) {
+    _id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddTaskGQL extends Apollo.Mutation<AddTaskMutation, AddTaskMutationVariables> {
+    document = AddTaskDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AddListDocument = gql`
+    mutation addList($listInput: ListInput!) {
+  addList(list: $listInput) {
+    _id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddListGQL extends Apollo.Mutation<AddListMutation, AddListMutationVariables> {
+    document = AddListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AssignUserDocument = gql`
+    mutation assignUser($input: AssignUserInput!) {
+  assignUser(input: $input) {
+    _id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AssignUserGQL extends Apollo.Mutation<AssignUserMutation, AssignUserMutationVariables> {
+    document = AssignUserDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const CurrentUserDocument = gql`
     query currentUser {
   currentUser {
@@ -438,12 +569,16 @@ export const RemoveTeamMemberDocument = gql`
   }
 export const namedOperations = {
   Query: {
+    getBoard: 'getBoard',
     currentUser: 'currentUser',
     userById: 'userById',
     getAllUsers: 'getAllUsers',
     getTeam: 'getTeam'
   },
   Mutation: {
+    addTask: 'addTask',
+    addList: 'addList',
+    assignUser: 'assignUser',
     createBoard: 'createBoard',
     createTeam: 'createTeam',
     addTeamMember: 'addTeamMember',

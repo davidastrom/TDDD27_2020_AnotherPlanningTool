@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { BoardComponent } from './components/board/board.component';
 import { HomeComponent } from './components/home/home.component';
 import { TeamComponent } from './components/team/team.component';
 import { AuthGuard } from './guards/auth/auth.guard';
@@ -20,6 +21,10 @@ const routes: Routes = [
 			{
 				path: 'team/:teamId',
 				component: TeamComponent,
+			},
+			{
+				path: 'board/:boardId',
+				component: BoardComponent,
 			}
 		],
 	},
@@ -28,6 +33,6 @@ const routes: Routes = [
 
 @NgModule({
 	imports: [RouterModule.forRoot(routes)],
-	exports: [RouterModule],
+exports: [RouterModule],
 })
 export class AppRoutingModule {}

@@ -1,0 +1,50 @@
+query getBoard($boardId: ObjectId!) {
+	board(boardId: $boardId) {
+		_id
+		name
+		members {
+			_id
+			username
+			picture
+		}
+		lists {
+			_id
+			name
+			items {
+				_id
+				title
+				description
+				assigned {
+					_id
+					username
+					picture
+				}
+			}
+		}
+		team {
+			members {
+				_id
+				username
+				picture
+			}
+		}
+	}
+}
+
+mutation addTask($taskInput: TaskInput!) {
+	addTask(task: $taskInput) {
+		_id
+	}
+}
+
+mutation addList($listInput: ListInput!) {
+	addList(list: $listInput) {
+		_id
+	}
+}
+
+mutation assignUser($input: AssignUserInput!) {
+	assignUser(input: $input) {
+		_id
+	}
+}

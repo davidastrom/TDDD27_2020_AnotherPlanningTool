@@ -3,6 +3,13 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+input AssignUserInput {
+  boardId: ID!
+  listId: ID!
+  taskId: ID!
+  userId: ID
+}
+
 """The Board model"""
 type Board {
   _id: ID!
@@ -33,7 +40,7 @@ type Mutation {
   addList(list: ListInput!): List!
   addTask(task: TaskInput!): Board!
   addTeamMember(teamId: ObjectId!, userId: ObjectId!): Team!
-  assignUser(boardId: ObjectId!, listId: ObjectId!, taskId: ObjectId!, userId: ObjectId!): Task!
+  assignUser(input: AssignUserInput!): Task!
   createBoard(board: BoardInput!, teamId: ObjectId): Board!
   createTeam(data: TeamInput!): Team!
   moveList(boardId: ObjectId!, index: Int!, listId: ObjectId!): Board!
@@ -56,7 +63,7 @@ type Query {
 """The Task model. Submodel of List"""
 type Task {
   _id: ID!
-  assigned: [User!]!
+  assigned: User
   description: String
   title: String!
 }

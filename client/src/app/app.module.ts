@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { HttpClientModule, HttpHeaders } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './components/login/login.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -29,6 +29,8 @@ import { TeamComponent } from './components/team/team.component';
 import { BoardComponent } from './components/board/board.component';
 import { MemberListComponent } from './components/member-list/member-list.component';
 import { MemberListItemComponent } from './components/member-list-item/member-list-item.component';
+import { BoardListComponent } from './components/board-list/board-list.component';
+import { BoardListTaskComponent } from './components/board-list-task/board-list-task.component';
 
 const graphQlUri = environment.apiUrl + '/graphql'; // <-- add the URL of the GraphQL server here
 @NgModule({
@@ -41,10 +43,12 @@ const graphQlUri = environment.apiUrl + '/graphql'; // <-- add the URL of the Gr
 		ProfileInfoComponent,
 		HomeListItemComponent,
 		HomeListComponent,
-  TeamComponent,
-  BoardComponent,
-  MemberListComponent,
-  MemberListItemComponent,
+		TeamComponent,
+		BoardComponent,
+		MemberListComponent,
+		MemberListItemComponent,
+		BoardListComponent,
+		BoardListTaskComponent,
 	],
 	imports: [
 		BrowserModule,

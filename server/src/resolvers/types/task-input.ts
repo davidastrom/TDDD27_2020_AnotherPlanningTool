@@ -19,3 +19,18 @@ export class TaskInput implements Partial<Task> {
 	@Field((type) => ID)
 	boardId!: ObjectId;
 }
+
+@InputType()
+export class AssignUserInput {
+	@Field((type) => ID)
+	listId!: ObjectId;
+
+	@Field((type) => ID)
+	boardId!: ObjectId;
+
+	@Field((type) => ID)
+	taskId!: ObjectId;
+
+	@Field((type) => ID, { nullable: true })
+	userId?: ObjectId;
+}
