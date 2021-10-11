@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
+	AddBoardMemberGQL,
 	AddListGQL,
 	AddTaskGQL,
 	AssignUserInput,
@@ -8,6 +9,7 @@ import {
 	GetBoardQuery,
 	ListInput,
 	namedOperations,
+	RemoveBoardMemberGQL,
 	TaskInput,
 } from 'src/generated/graphql';
 import { ActivatedRoute, ParamMap } from '@angular/router';
@@ -50,7 +52,9 @@ export class BoardComponent implements OnInit {
 		private addListGQL: AddListGQL,
 		private assignUserGQL: AssignUserGQL,
 		private moveListGQL: MoveListGQL,
-		private moveTaskGQL: MoveTaskGQL
+		private moveTaskGQL: MoveTaskGQL,
+		private addBoardMemberGQL: AddBoardMemberGQL,
+		private removeBoardMemberGQL: RemoveBoardMemberGQL
 	) {}
 
 	ngOnInit(): void {
@@ -140,6 +144,23 @@ export class BoardComponent implements OnInit {
 		this.assignUserGQL
 			.mutate(
 				{ input: input },
+				{ refetchQueries: [namedOperations.Query.getBoard] }
+			)
+			.subscribe();
+	}
+
+	addMember(id: string) {
+		this.addBoardMemberGQL
+			.mutate(
+				{ userId: id, boardId: this.boardId },
+				{ refetchQueries: [namedOperations.Query.getBoard] }
+			)
+			.subscribe();
+	}
+	removeMember(id: string) {
+		this.removeBoardMemberGQL
+			.mutate(
+				{ userId: id, boardId: this.boardId },
 				{ refetchQueries: [namedOperations.Query.getBoard] }
 			)
 			.subscribe();

@@ -72,3 +72,15 @@ mutation assignUser($input: AssignUserInput!) {
 		_id
 	}
 }
+
+mutation addBoardMember($userId: ObjectId!, $boardId: ObjectId!) {
+	addBoardMember(userId: $userId, boardId: $boardId) {
+		_id
+	}
+}
+
+mutation removeBoardMember($userId: ObjectId!, $boardId: ObjectId!) {
+	removeBoardMember(userId: $userId, boardId: $boardId) {
+		_id
+	}
+}

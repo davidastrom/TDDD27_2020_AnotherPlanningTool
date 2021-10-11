@@ -243,6 +243,22 @@ export type AssignUserMutationVariables = Exact<{
 
 export type AssignUserMutation = { __typename?: 'Mutation', assignUser: { __typename?: 'Task', _id: string } };
 
+export type AddBoardMemberMutationVariables = Exact<{
+  userId: Scalars['ObjectId'];
+  boardId: Scalars['ObjectId'];
+}>;
+
+
+export type AddBoardMemberMutation = { __typename?: 'Mutation', addBoardMember: { __typename?: 'Board', _id: string } };
+
+export type RemoveBoardMemberMutationVariables = Exact<{
+  userId: Scalars['ObjectId'];
+  boardId: Scalars['ObjectId'];
+}>;
+
+
+export type RemoveBoardMemberMutation = { __typename?: 'Mutation', removeBoardMember: { __typename?: 'Board', _id: string } };
+
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -434,6 +450,42 @@ export const AssignUserDocument = gql`
   })
   export class AssignUserGQL extends Apollo.Mutation<AssignUserMutation, AssignUserMutationVariables> {
     document = AssignUserDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AddBoardMemberDocument = gql`
+    mutation addBoardMember($userId: ObjectId!, $boardId: ObjectId!) {
+  addBoardMember(userId: $userId, boardId: $boardId) {
+    _id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddBoardMemberGQL extends Apollo.Mutation<AddBoardMemberMutation, AddBoardMemberMutationVariables> {
+    document = AddBoardMemberDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const RemoveBoardMemberDocument = gql`
+    mutation removeBoardMember($userId: ObjectId!, $boardId: ObjectId!) {
+  removeBoardMember(userId: $userId, boardId: $boardId) {
+    _id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class RemoveBoardMemberGQL extends Apollo.Mutation<RemoveBoardMemberMutation, RemoveBoardMemberMutationVariables> {
+    document = RemoveBoardMemberDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -643,6 +695,8 @@ export const namedOperations = {
     addTask: 'addTask',
     moveTask: 'moveTask',
     assignUser: 'assignUser',
+    addBoardMember: 'addBoardMember',
+    removeBoardMember: 'removeBoardMember',
     createBoard: 'createBoard',
     createTeam: 'createTeam',
     addTeamMember: 'addTeamMember',

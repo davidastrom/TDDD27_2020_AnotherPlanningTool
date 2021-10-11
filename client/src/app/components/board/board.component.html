@@ -1,6 +1,19 @@
 <div class="row">
-	<div class="col-12">
+	<div class="d-flex col-12 justify-content-between">
 		<h3>{{ (board$ | async)?.board?.name }}</h3>
+		<div ngbDropdown container="body">
+			<button class="btn btn-outline-secondary" ngbDropdownToggle>
+				Board Members
+			</button>
+			<app-member-list
+				ngbDropdownMenu
+				class="py-0"
+				[ngStyle]="{ 'min-width': '20vw' }"
+				[list]="(board$ | async)?.board?.members ?? []"
+				(newMemberEvent)="addMember($event)"
+				(removeMemberEvent)="removeMember($event)"
+			></app-member-list>
+		</div>
 	</div>
 </div>
 <div
@@ -8,7 +21,7 @@
 	cdkDropListOrientation="horizontal"
 	cdkDropListLockAxis="x"
 	(cdkDropListDropped)="moveList($event)"
-	class="row horizontal-scrollable"
+	class="row horizontal-scrollable mt-2"
 	cdkDropListGroup
 >
 	<div *ngFor="let list of lists" class="col-3" cdkDrag [cdkDragData]="list">
