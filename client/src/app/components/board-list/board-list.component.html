@@ -1,12 +1,19 @@
 <div class="card">
 	<div class="card-body">
 		<h5 class="card-title">{{ list.name }}</h5>
-		<app-board-list-task
-			*ngFor="let task of list.items"
-			[task]="task"
-			[teamMembers]="teamMembers"
-			(assignUserEvent)="assignUser($event)"
-		></app-board-list-task>
+		<div
+			cdkDropList
+			[cdkDropListData]="list"
+			(cdkDropListDropped)="moveTask($event)"
+			class="py-2"
+		>
+			<app-board-list-task
+				*ngFor="let task of list.items"
+				[task]="task"
+				[teamMembers]="teamMembers"
+				(assignUserEvent)="assignUser($event)"
+			></app-board-list-task>
+		</div>
 		<div *ngIf="showAddForm" class="card mb-2">
 			<div class="card-body">
 				<h6 class="card-title">Create new task</h6>

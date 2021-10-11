@@ -1,6 +1,22 @@
-<div class="card mb-2" (click)="toggleShowDetails(true)">
+<div
+	class="card mb-2"
+	(click)="toggleShowDetails($event, true)"
+	cdkDrag
+	[cdkDragData]="task"
+	(cdkDragStarted)="cdkDragStarted($event)"
+>
 	<div class="card-body">
-		<h6 class="card-title">{{ task.title }}</h6>
+		<div class="d-flex w-100 justify-content-between">
+			<h6 class="card-title">{{ task.title }}</h6>
+			<a
+				*ngIf="showDetails"
+				[routerLink]=""
+				class="px-1"
+				(click)="toggleShowDetails($event, false)"
+			>
+				<fa-icon [icon]="faUp"></fa-icon>
+			</a>
+		</div>
 		<p *ngIf="showDetails">{{ task.description }}</p>
 		<div *ngIf="!showDetails" class="d-flex w-100 align-items-center">
 			<img
@@ -29,4 +45,9 @@
 			</select>
 		</div>
 	</div>
+	<div
+		class="task-custom-placeholder"
+		[ngStyle]="{ 'height.px': height }"
+		*cdkDragPlaceholder
+	></div>
 </div>

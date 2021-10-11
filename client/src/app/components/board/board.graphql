@@ -31,14 +31,38 @@ query getBoard($boardId: ObjectId!) {
 	}
 }
 
+mutation addList($listInput: ListInput!) {
+	addList(list: $listInput) {
+		_id
+	}
+}
+
+mutation moveList($index: Int!, $listId: ObjectId!, $boardId: ObjectId!) {
+	moveList(index: $index, listId: $listId, boardId: $boardId) {
+		_id
+	}
+}
+
 mutation addTask($taskInput: TaskInput!) {
 	addTask(task: $taskInput) {
 		_id
 	}
 }
 
-mutation addList($listInput: ListInput!) {
-	addList(list: $listInput) {
+mutation moveTask(
+	$index: Int!
+	$taskId: ObjectId!
+	$goalListId: ObjectId!
+	$startListId: ObjectId!
+	$boardId: ObjectId!
+) {
+	moveTask(
+		index: $index
+		taskId: $taskId
+		goalListId: $goalListId
+		startListId: $startListId
+		boardId: $boardId
+	) {
 		_id
 	}
 }

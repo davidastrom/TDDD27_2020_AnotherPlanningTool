@@ -3,13 +3,23 @@
 		<h3>{{ (board$ | async)?.board?.name }}</h3>
 	</div>
 </div>
-<div class="row horizontal-scrollable">
-	<div *ngFor="let list of (board$ | async)?.board?.lists ?? []" class="col-3">
+<div
+	cdkDropList
+	cdkDropListOrientation="horizontal"
+	cdkDropListLockAxis="x"
+	(cdkDropListDropped)="moveList($event)"
+	class="row horizontal-scrollable"
+	cdkDropListGroup
+>
+	<div *ngFor="let list of lists" class="col-3" cdkDrag [cdkDragData]="list">
+		<div class="col-3 example-custom-placeholder" *cdkDragPlaceholder></div>
+
 		<app-board-list
 			[list]="list"
 			[teamMembers]="boardMembers ?? []"
 			(addTaskEvent)="newTask($event)"
 			(assignUserEvent)="assignUser($event)"
+			(moveTaskEvent)="moveTask($event)"
 		></app-board-list>
 	</div>
 	<div class="col-3">

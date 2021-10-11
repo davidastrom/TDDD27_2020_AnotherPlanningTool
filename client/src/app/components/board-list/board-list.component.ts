@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TaskInput, AssignUserInput } from 'src/generated/graphql';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 @Component({
 	selector: 'app-board-list',
@@ -14,6 +14,7 @@ export class BoardListComponent implements OnInit {
 
 	@Output() addTaskEvent = new EventEmitter<TaskInput>();
 	@Output() assignUserEvent = new EventEmitter<AssignUserInput>();
+	@Output() moveTaskEvent = new EventEmitter<CdkDragDrop<any, any, any>>();
 
 	newTaskInput: TaskInput = {
 		boardId: '',
@@ -31,6 +32,10 @@ export class BoardListComponent implements OnInit {
 	addTask() {
 		this.newTaskInput.listId = this.list._id;
 		this.addTaskEvent.emit(this.newTaskInput);
+	}
+
+	moveTask(event: CdkDragDrop<any, any, any>) {
+		this.moveTaskEvent.emit(event);
 	}
 
 	assignUser(input: AssignUserInput) {

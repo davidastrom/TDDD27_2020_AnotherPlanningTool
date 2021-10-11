@@ -202,6 +202,22 @@ export type GetBoardQueryVariables = Exact<{
 
 export type GetBoardQuery = { __typename?: 'Query', board: { __typename?: 'Board', _id: string, name: string, members: Array<{ __typename?: 'User', _id: string, username: string, picture?: string | null | undefined }>, lists: Array<{ __typename?: 'List', _id: string, name: string, items: Array<{ __typename?: 'Task', _id: string, title: string, description?: string | null | undefined, assigned?: { __typename?: 'User', _id: string, username: string, picture?: string | null | undefined } | null | undefined }> }>, team?: { __typename?: 'Team', members: Array<{ __typename?: 'User', _id: string, username: string, picture?: string | null | undefined }> } | null | undefined } };
 
+export type AddListMutationVariables = Exact<{
+  listInput: ListInput;
+}>;
+
+
+export type AddListMutation = { __typename?: 'Mutation', addList: { __typename?: 'List', _id: string } };
+
+export type MoveListMutationVariables = Exact<{
+  index: Scalars['Int'];
+  listId: Scalars['ObjectId'];
+  boardId: Scalars['ObjectId'];
+}>;
+
+
+export type MoveListMutation = { __typename?: 'Mutation', moveList: { __typename?: 'Board', _id: string } };
+
 export type AddTaskMutationVariables = Exact<{
   taskInput: TaskInput;
 }>;
@@ -209,12 +225,16 @@ export type AddTaskMutationVariables = Exact<{
 
 export type AddTaskMutation = { __typename?: 'Mutation', addTask: { __typename?: 'Board', _id: string } };
 
-export type AddListMutationVariables = Exact<{
-  listInput: ListInput;
+export type MoveTaskMutationVariables = Exact<{
+  index: Scalars['Int'];
+  taskId: Scalars['ObjectId'];
+  goalListId: Scalars['ObjectId'];
+  startListId: Scalars['ObjectId'];
+  boardId: Scalars['ObjectId'];
 }>;
 
 
-export type AddListMutation = { __typename?: 'Mutation', addList: { __typename?: 'List', _id: string } };
+export type MoveTaskMutation = { __typename?: 'Mutation', moveTask: { __typename?: 'Board', _id: string } };
 
 export type AssignUserMutationVariables = Exact<{
   input: AssignUserInput;
@@ -323,6 +343,42 @@ export const GetBoardDocument = gql`
       super(apollo);
     }
   }
+export const AddListDocument = gql`
+    mutation addList($listInput: ListInput!) {
+  addList(list: $listInput) {
+    _id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddListGQL extends Apollo.Mutation<AddListMutation, AddListMutationVariables> {
+    document = AddListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const MoveListDocument = gql`
+    mutation moveList($index: Int!, $listId: ObjectId!, $boardId: ObjectId!) {
+  moveList(index: $index, listId: $listId, boardId: $boardId) {
+    _id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class MoveListGQL extends Apollo.Mutation<MoveListMutation, MoveListMutationVariables> {
+    document = MoveListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const AddTaskDocument = gql`
     mutation addTask($taskInput: TaskInput!) {
   addTask(task: $taskInput) {
@@ -341,9 +397,15 @@ export const AddTaskDocument = gql`
       super(apollo);
     }
   }
-export const AddListDocument = gql`
-    mutation addList($listInput: ListInput!) {
-  addList(list: $listInput) {
+export const MoveTaskDocument = gql`
+    mutation moveTask($index: Int!, $taskId: ObjectId!, $goalListId: ObjectId!, $startListId: ObjectId!, $boardId: ObjectId!) {
+  moveTask(
+    index: $index
+    taskId: $taskId
+    goalListId: $goalListId
+    startListId: $startListId
+    boardId: $boardId
+  ) {
     _id
   }
 }
@@ -352,8 +414,8 @@ export const AddListDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class AddListGQL extends Apollo.Mutation<AddListMutation, AddListMutationVariables> {
-    document = AddListDocument;
+  export class MoveTaskGQL extends Apollo.Mutation<MoveTaskMutation, MoveTaskMutationVariables> {
+    document = MoveTaskDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -576,8 +638,10 @@ export const namedOperations = {
     getTeam: 'getTeam'
   },
   Mutation: {
-    addTask: 'addTask',
     addList: 'addList',
+    moveList: 'moveList',
+    addTask: 'addTask',
+    moveTask: 'moveTask',
     assignUser: 'assignUser',
     createBoard: 'createBoard',
     createTeam: 'createTeam',

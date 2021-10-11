@@ -1,5 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { AssignUserInput } from 'src/generated/graphql';
+import { CdkDragStart } from '@angular/cdk/drag-drop';
 
 @Component({
 	selector: 'app-board-list-task',
@@ -16,6 +18,10 @@ export class BoardListTaskComponent implements OnInit {
 
 	assignedUser: any;
 
+	faUp = faChevronUp;
+
+	height: any;
+
 	constructor() {}
 
 	ngOnInit(): void {
@@ -26,7 +32,8 @@ export class BoardListTaskComponent implements OnInit {
 		}
 	}
 
-	toggleShowDetails(show: boolean) {
+	toggleShowDetails(event: MouseEvent, show: boolean) {
+		event.stopPropagation();
 		this.showDetails = show;
 	}
 
@@ -42,5 +49,9 @@ export class BoardListTaskComponent implements OnInit {
 			userId: this.assignedUser._id,
 		};
 		this.assignUserEvent.emit(input);
+	}
+
+	cdkDragStarted(event: CdkDragStart<any>) {
+		this.height = event.source.element.nativeElement.offsetHeight;
 	}
 }

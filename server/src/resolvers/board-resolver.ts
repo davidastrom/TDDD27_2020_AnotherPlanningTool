@@ -222,10 +222,13 @@ export class BoardResolver {
 			throw new ForbiddenError('Not authorized to view resource');
 		}
 
+		console.log(listId);
+		console.log(board.lists);
+
 		const listIndex = board.lists.findIndex(
 			(list) => list._id.toString() == listId.toString()
 		);
-		if (!listIndex) {
+		if (listIndex == -1) {
 			throw new UserInputError('Invalid List id');
 		}
 
@@ -270,7 +273,7 @@ export class BoardResolver {
 		const startIndex = startList.items.findIndex(
 			(task) => task._id.toString() == taskId.toString()
 		);
-		if (!startIndex) {
+		if (startIndex == -1) {
 			throw new UserInputError('Invalid Task id');
 		}
 

@@ -12,6 +12,7 @@ import {
 	SocialAuthServiceConfig,
 	SocialLoginModule,
 } from 'angularx-social-login';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { environment } from 'src/environments/environment';
 import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
 import { AppLayoutComponent } from './layouts/app-layout/app-layout.component';
@@ -58,6 +59,7 @@ const graphQlUri = environment.apiUrl + '/graphql'; // <-- add the URL of the Gr
 		FontAwesomeModule,
 		SocialLoginModule,
 		FormsModule,
+		DragDropModule,
 	],
 	providers: [
 		{
