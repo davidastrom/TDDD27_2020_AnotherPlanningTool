@@ -3,9 +3,19 @@
 		<app-profile-info [user]="(user$ | async)?.currentUser"></app-profile-info>
 	</div>
 	<div class="col-5">
-		<app-home-list [title]="'Board'" [list]="(user$ | async)?.currentUser?.boards ?? []" (newItemEvent)="addBoard($event)"></app-home-list>
+		<app-home-list
+			[title]="'Board'"
+			[list]="(user$ | async)?.currentUser?.boards ?? []"
+			(newItemEvent)="addBoard($event)"
+			[showMemberCount]="true"
+		></app-home-list>
 	</div>
 	<div class="col-5">
-		<app-home-list [title]="'Team'" [list]="(user$ | async)?.currentUser?.teams ?? []" (newItemEvent)="addTeam($event)"></app-home-list>
+		<app-home-list
+			[title]="'Team'"
+			[list]="(user$ | async)?.currentUser?.teams ?? []"
+			(newItemEvent)="addTeam($event)"
+			[showMemberCount]="true"
+		></app-home-list>
 	</div>
 </div>

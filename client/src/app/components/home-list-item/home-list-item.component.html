@@ -1,6 +1,9 @@
 <a [routerLink]="url" class="list-group-item list-group-item-action">
-    <div class="d-flex w-100 justify-content-between">
-        <h5 class="mb-1">{{ item.name }}</h5>
-    </div>
-    <p *ngIf="showMemberCount" class="mb-1">{{ item.members?.length ?? 0 }} members</p>
+	<div class="d-flex w-100 justify-content-between">
+		<h5 [class]="showMemberCount ? 'mb-1' : 'mb-0'">{{ item.name }}</h5>
+	</div>
+	<p *ngIf="showMemberCount" class="mb-0">
+		{{ item.members?.length ?? 0 }}
+		{{ item.members?.length == 1 ? 'member' : 'members' }}
+	</p>
 </a>
