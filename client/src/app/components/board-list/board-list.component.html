@@ -1,6 +1,8 @@
 <div class="card">
+	<div class="card-header" cdkDragHandle>
+		<h5 class="card-text">{{ list.name }}</h5>
+	</div>
 	<div class="card-body">
-		<h5 class="card-title">{{ list.name }}</h5>
 		<div
 			cdkDropList
 			[cdkDropListData]="list"
