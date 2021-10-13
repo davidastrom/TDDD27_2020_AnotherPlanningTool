@@ -7,7 +7,7 @@ import {
 } from '@typegoose/typegoose';
 import { ObjectId } from 'mongodb';
 
-import { Ref } from '../types';
+import { Ref } from '../interfaces/types';
 
 import { Team } from './team';
 import { Board } from './board';
@@ -28,7 +28,7 @@ export class User {
 	@Property({ required: true, unique: true })
 	email!: string;
 
-	@Field({nullable: true})
+	@Field({ nullable: true })
 	@Property()
 	picture?: string;
 

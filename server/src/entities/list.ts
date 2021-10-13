@@ -6,8 +6,6 @@ import {
 } from '@typegoose/typegoose';
 import { ObjectId } from 'mongodb';
 
-import { Ref } from '../types';
-
 import { Task } from './task';
 
 @ObjectType({ description: 'The List model. Submodel for Board' })

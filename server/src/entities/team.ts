@@ -6,7 +6,7 @@ import {
 } from '@typegoose/typegoose';
 import { ObjectId } from 'mongodb';
 
-import { Ref } from '../types';
+import { Ref } from '../interfaces/types';
 
 import { User } from './user';
 import { Board } from './board';
