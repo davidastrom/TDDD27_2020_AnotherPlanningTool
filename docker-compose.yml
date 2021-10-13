@@ -2,13 +2,15 @@ version: "3.8"
 
 services:
   angular-client:
-    container_name: angular-client
-    build: ./client
+    build:
+      context: ./client
+      target: 'develop-stage'
     ports:
-      - "4200:4200"
-    command: npm run start:docker.dev
+      - '4200:4200'
     volumes:
-      - ./client/src:/usr/src/app/src
+      - ./client:/app
+    container_name: angular-client
+    command: npm run start:docker.dev
     depends_on:
       - express-server
     networks:
