@@ -6,6 +6,8 @@ import {
 	Arg,
 	Ctx,
 	Authorized,
+	PubSub,
+	Publisher,
 } from 'type-graphql';
 import { ObjectId } from 'mongodb';
 import { ObjectIdScalar } from '../object-id.scalar';
@@ -24,7 +26,8 @@ export class TaskResolver {
 	@Mutation((returns) => Task)
 	async assignUser(
 		@Arg('input') input: AssignUserInput,
-		@Ctx() { user }: Context
+		@Ctx() { user }: Context,
+		@PubSub('LISTS') publish: Publisher<Board>
 	) {
 		const board = await BoardModel.findById(input.boardId);
 		if (!board) {
@@ -54,6 +57,8 @@ export class TaskResolver {
 		task.assigned = input.userId;
 
 		await board.save();
+
+		publish(board);
 
 		return task;
 	}

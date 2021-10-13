@@ -1,4 +1,13 @@
-import { Resolver, Query, Mutation, Arg, Ctx, Authorized } from 'type-graphql';
+import {
+	Resolver,
+	Query,
+	Mutation,
+	Arg,
+	Ctx,
+	Authorized,
+	PubSub,
+	Publisher,
+} from 'type-graphql';
 import { List } from '../entities/list';
 
 import { Board, BoardModel } from '../entities/board';
@@ -15,7 +24,11 @@ import {
 export class ListResolver {
 	@Authorized()
 	@Mutation((returns) => Board)
-	async addTask(@Arg('task') taskInput: TaskInput, @Ctx() { user }: Context) {
+	async addTask(
+		@Arg('task') taskInput: TaskInput,
+		@Ctx() { user }: Context,
+		@PubSub('LISTS') publish: Publisher<Board>
+	) {
 		const board = await BoardModel.findById(taskInput.boardId);
 		if (!board) {
 			throw new UserInputError('Invalid Board id');
@@ -40,6 +53,8 @@ export class ListResolver {
 		list.items.push(task);
 
 		await board.save();
+
+		await publish(board);
 
 		return list;
 	}

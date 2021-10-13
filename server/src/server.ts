@@ -16,11 +16,12 @@ import { BoardResolver } from './resolvers/board-resolver';
 import { ListResolver } from './resolvers/list-resolver';
 import { TeamResolver } from './resolvers/team-resolver';
 import { TaskResolver } from './resolvers/task-resolver';
-import { Context } from './interfaces/context';
 import { ErrorInterceptor } from './middleware/error-interceptor';
 import GoogleAuthConfig from './auth/google-auth-config';
 import { UserModel } from './entities/user';
 import { graphqlAuthChecker } from './auth/graphql-auth-checker';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
+import { execute, subscribe } from 'graphql';
 
 const main = async () => {
 	/* Set up and connect to db */
@@ -75,7 +76,38 @@ const main = async () => {
 
 			return;
 		},
+		plugins: [
+			{
+				async serverWillStart() {
+					return {
+						async drainServer() {
+							subscriptionServer.close();
+						},
+					};
+				},
+			},
+		],
 	});
+
+	const subscriptionServer = SubscriptionServer.create(
+		{
+			schema,
+			execute,
+			subscribe,
+			async onConnect(
+				connectionParams: { authorization: string },
+				webSocket: WebSocket
+			) {
+				if (connectionParams.authorization) {
+					const user = await UserModel.getByToken(
+						connectionParams.authorization
+					);
+					return { user };
+				}
+			},
+		},
+		{ server: httpsServer, path: server.graphqlPath }
+	);
 
 	app.use(cors());
 

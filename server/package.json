@@ -19,6 +19,7 @@
 	},
 	"homepage": "https://github.com/Qnott/TDDD27_2020_AnotherPlanningTool#readme",
 	"dependencies": {
+		"@graphql-tools/schema": "^8.2.0",
 		"apollo-server-express": "^3.3.0",
 		"class-validator": "^0.12.2",
 		"compression": "^1.7.4",
@@ -38,7 +39,8 @@
 		"jsonwebtoken": "^8.5.1",
 		"mongoose": "^5.13.9",
 		"ncp": "^2.0.0",
-		"reflect-metadata": "^0.1.13"
+		"reflect-metadata": "^0.1.13",
+		"subscriptions-transport-ws": "^0.9.19"
 	},
 	"devDependencies": {
 		"@typegoose/typegoose": "^7.6.3",

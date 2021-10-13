@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import {
 	AddBoardMemberGQL,
 	AddListGQL,
@@ -8,6 +8,7 @@ import {
 	GetBoardGQL,
 	GetBoardQuery,
 	ListInput,
+	ListUpdateGQL,
 	namedOperations,
 	RemoveBoardMemberGQL,
 	TaskInput,
@@ -37,6 +38,8 @@ export class BoardComponent implements OnInit {
 	lists: any[];
 	boardMembers: any[];
 
+	listUpdateSubscription: Subscription;
+
 	newListInput: ListInput = {
 		boardId: '',
 		name: '',
@@ -48,6 +51,7 @@ export class BoardComponent implements OnInit {
 	constructor(
 		private route: ActivatedRoute,
 		private getBoardGQL: GetBoardGQL,
+		private listUpdateGQL: ListUpdateGQL,
 		private addTaskGQL: AddTaskGQL,
 		private addListGQL: AddListGQL,
 		private assignUserGQL: AssignUserGQL,
@@ -76,6 +80,24 @@ export class BoardComponent implements OnInit {
 					);
 			})
 		);
+		this.listUpdateSubscription = this.route.paramMap
+			.pipe(
+				switchMap((params: ParamMap) => {
+					return this.listUpdateGQL.subscribe({
+						boardId: params.get('boardId')!,
+					});
+				})
+			)
+			.subscribe(({ data }) => {
+				console.log(data);
+				if (data) {
+					this.lists = data.boardListsSubscription;
+				}
+			});
+	}
+
+	ngOnDestroy(): void {
+		this.listUpdateSubscription.unsubscribe();
 	}
 
 	toggleShowAddForm(show: boolean) {
@@ -84,39 +106,24 @@ export class BoardComponent implements OnInit {
 
 	newList() {
 		this.newListInput.boardId = this.boardId;
-		this.addListGQL
-			.mutate(
-				{ listInput: this.newListInput },
-				{ refetchQueries: [namedOperations.Query.getBoard] }
-			)
-			.subscribe();
+		this.addListGQL.mutate({ listInput: this.newListInput }).subscribe();
 		this.newListInput.name = '';
 	}
 
 	moveList(event: CdkDragDrop<any, any, any>) {
 		moveItemInArray(this.lists, event.previousIndex, event.currentIndex);
 		this.moveListGQL
-			.mutate(
-				{
-					index: event.currentIndex,
-					listId: event.item.data._id,
-					boardId: this.boardId,
-				},
-				{
-					refetchQueries: [namedOperations.Query.getBoard],
-				}
-			)
+			.mutate({
+				index: event.currentIndex,
+				listId: event.item.data._id,
+				boardId: this.boardId,
+			})
 			.subscribe();
 	}
 
 	newTask(taskInput: TaskInput) {
 		taskInput.boardId = this.boardId;
-		this.addTaskGQL
-			.mutate(
-				{ taskInput: taskInput },
-				{ refetchQueries: [namedOperations.Query.getBoard] }
-			)
-			.subscribe();
+		this.addTaskGQL.mutate({ taskInput: taskInput }).subscribe();
 		taskInput.listId = '';
 		taskInput.title = '';
 		taskInput.description = '';
@@ -124,29 +131,19 @@ export class BoardComponent implements OnInit {
 
 	moveTask(event: CdkDragDrop<any, any, any>) {
 		this.moveTaskGQL
-			.mutate(
-				{
-					index: event.currentIndex,
-					taskId: event.item.data._id,
-					goalListId: event.container.data._id,
-					startListId: event.previousContainer.data._id,
-					boardId: this.boardId,
-				},
-				{
-					refetchQueries: [namedOperations.Query.getBoard],
-				}
-			)
+			.mutate({
+				index: event.currentIndex,
+				taskId: event.item.data._id,
+				goalListId: event.container.data._id,
+				startListId: event.previousContainer.data._id,
+				boardId: this.boardId,
+			})
 			.subscribe();
 	}
 
 	assignUser(input: AssignUserInput) {
 		input.boardId = this.boardId;
-		this.assignUserGQL
-			.mutate(
-				{ input: input },
-				{ refetchQueries: [namedOperations.Query.getBoard] }
-			)
-			.subscribe();
+		this.assignUserGQL.mutate({ input: input }).subscribe();
 	}
 
 	addMember(id: string) {

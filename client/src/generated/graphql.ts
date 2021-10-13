@@ -155,6 +155,16 @@ export type QueryUserArgs = {
   userId: Scalars['ObjectId'];
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  boardListsSubscription: Array<List>;
+};
+
+
+export type SubscriptionBoardListsSubscriptionArgs = {
+  boardId: Scalars['ID'];
+};
+
 /** The Task model. Submodel of List */
 export type Task = {
   __typename?: 'Task';
@@ -258,6 +268,13 @@ export type RemoveBoardMemberMutationVariables = Exact<{
 
 
 export type RemoveBoardMemberMutation = { __typename?: 'Mutation', removeBoardMember: { __typename?: 'Board', _id: string } };
+
+export type ListUpdateSubscriptionVariables = Exact<{
+  boardId: Scalars['ID'];
+}>;
+
+
+export type ListUpdateSubscription = { __typename?: 'Subscription', boardListsSubscription: Array<{ __typename?: 'List', _id: string, name: string, items: Array<{ __typename?: 'Task', _id: string, title: string, description?: string | null | undefined, assigned?: { __typename?: 'User', _id: string, username: string, picture?: string | null | undefined } | null | undefined }> }> };
 
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -491,6 +508,35 @@ export const RemoveBoardMemberDocument = gql`
       super(apollo);
     }
   }
+export const ListUpdateDocument = gql`
+    subscription listUpdate($boardId: ID!) {
+  boardListsSubscription(boardId: $boardId) {
+    _id
+    name
+    items {
+      _id
+      title
+      description
+      assigned {
+        _id
+        username
+        picture
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ListUpdateGQL extends Apollo.Subscription<ListUpdateSubscription, ListUpdateSubscriptionVariables> {
+    document = ListUpdateDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const CurrentUserDocument = gql`
     query currentUser {
   currentUser {
@@ -701,5 +747,8 @@ export const namedOperations = {
     createTeam: 'createTeam',
     addTeamMember: 'addTeamMember',
     removeTeamMember: 'removeTeamMember'
+  },
+  Subscription: {
+    listUpdate: 'listUpdate'
   }
 }

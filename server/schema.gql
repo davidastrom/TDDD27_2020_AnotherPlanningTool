@@ -60,6 +60,10 @@ type Query {
   user(userId: ObjectId!): User!
 }
 
+type Subscription {
+  boardListsSubscription(boardId: ID!): [List!]!
+}
+
 """The Task model. Submodel of List"""
 type Task {
   _id: ID!

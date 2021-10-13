@@ -84,3 +84,20 @@ mutation removeBoardMember($userId: ObjectId!, $boardId: ObjectId!) {
 		_id
 	}
 }
+
+subscription listUpdate($boardId: ID!) {
+	boardListsSubscription(boardId: $boardId) {
+		_id
+		name
+		items {
+			_id
+			title
+			description
+			assigned {
+				_id
+				username
+				picture
+			}
+		}
+	}
+}

@@ -11,6 +11,7 @@ export const environment = {
 		},
 	},
 	apiUrl: 'https://localhost:8080',
+	apiWsUrl: 'wss://localhost:8080',
 };
 
 /*

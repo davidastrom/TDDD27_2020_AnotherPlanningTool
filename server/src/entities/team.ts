@@ -31,7 +31,7 @@ export class Team {
 	_doc: any;
 
 	public isMember(this: Team, userId: ObjectId): boolean {
-		return this.members.includes(userId);
+		return this._doc.members.includes(userId);
 	}
 }
 

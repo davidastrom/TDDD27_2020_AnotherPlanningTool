@@ -36,11 +36,11 @@ export class Board {
 	_doc: any;
 
 	public async isMember(this: Board, userId: ObjectId): Promise<boolean> {
-		if (!this.members.includes(userId)) {
+		if (!this._doc.members.includes(userId)) {
 			if (this.team) {
 				const team = await TeamModel.findById(this.team);
 				if (team) {
-					return team.isMember(userId); 
+					return team.isMember(userId);
 				}
 			}
 			return false;

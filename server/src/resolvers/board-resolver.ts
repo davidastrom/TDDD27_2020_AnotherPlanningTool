@@ -8,13 +8,18 @@ import {
 	Int,
 	Ctx,
 	Authorized,
+	Subscription,
+	ResolverFilterData,
+	Args,
+	PubSub,
+	Publisher,
 } from 'type-graphql';
-import { ObjectId } from 'mongodb';
+import { ObjectId, ObjectID } from 'mongodb';
 
 import { ObjectIdScalar } from '../object-id.scalar';
 
 import { Board, BoardModel } from '../entities/board';
-import { BoardInput } from './types/board-input';
+import { BoardInput, BoardListsArgs } from './types/board-input';
 
 import { Team, TeamModel } from '../entities/team';
 import { User, UserModel } from '../entities/user';
@@ -47,10 +52,23 @@ export class BoardResolver {
 		return board;
 	}
 
-	// @Query((returns) => [Board])
-	// async allBoards() {
-	// 	return await BoardModel.find();
-	// }
+	@Authorized()
+	@Subscription((returns) => [List], {
+		topics: 'LISTS',
+		filter: ({ payload, args }: ResolverFilterData<Board, BoardListsArgs>) => {
+			return payload._id == args.boardId;
+		},
+	})
+	async boardListsSubscription(
+		@Root() updatedBoard: Board,
+		@Args() args: BoardListsArgs,
+		@Ctx() { user }: Context
+	): Promise<List[]> {
+		if (!(await updatedBoard.isMember(user._id))) {
+			throw new ForbiddenError('Not authorized to view resource');
+		}
+		return updatedBoard._doc.lists;
+	}
 
 	@Authorized()
 	@Mutation((returns) => Board)
@@ -58,7 +76,8 @@ export class BoardResolver {
 		@Arg('board') boardInput: BoardInput,
 		@Arg('teamId', (type) => ObjectIdScalar, { nullable: true })
 		teamId: ObjectId,
-		@Ctx() { user }: Context
+		@Ctx() { user }: Context,
+		@PubSub('LISTS') publish: Publisher<Board>
 	): Promise<Board> {
 		let team;
 		if (teamId) {
@@ -104,6 +123,8 @@ export class BoardResolver {
 			user.boards.push(board._id);
 			await user.save();
 		}
+
+		await publish(board);
 
 		return board;
 	}
@@ -181,12 +202,17 @@ export class BoardResolver {
 				break;
 			}
 		}
+
 		return board;
 	}
 
 	@Authorized()
 	@Mutation((returns) => List)
-	async addList(@Arg('list') listInput: ListInput, @Ctx() { user }: Context) {
+	async addList(
+		@Arg('list') listInput: ListInput,
+		@Ctx() { user }: Context,
+		@PubSub('LISTS') publish: Publisher<Board>
+	) {
 		const board = await BoardModel.findById(listInput.boardId);
 		if (!board) {
 			throw new Error('Invalid Board id');
@@ -202,7 +228,11 @@ export class BoardResolver {
 
 		board.lists.push(list);
 
-		return await board.save();
+		await board.save();
+
+		await publish(board);
+
+		return list;
 	}
 
 	@Authorized()
@@ -211,7 +241,8 @@ export class BoardResolver {
 		@Arg('boardId', (type) => ObjectIdScalar) boardId: ObjectId,
 		@Arg('listId', (type) => ObjectIdScalar) listId: ObjectId,
 		@Arg('index', (type) => Int) index: number,
-		@Ctx() { user }: Context
+		@Ctx() { user }: Context,
+		@PubSub('LISTS') publish: Publisher<Board>
 	) {
 		const board = await BoardModel.findById(boardId);
 		if (!board) {
@@ -234,7 +265,11 @@ export class BoardResolver {
 
 		const list = board.lists.splice(listIndex, 1)[0];
 		board.lists.splice(index, 0, list);
-		return await board.save();
+		await board.save();
+
+		await publish(board);
+
+		return board;
 	}
 
 	@Authorized()
@@ -245,7 +280,8 @@ export class BoardResolver {
 		@Arg('goalListId', (type) => ObjectIdScalar) goalId: ObjectId,
 		@Arg('taskId', (type) => ObjectIdScalar) taskId: ObjectId,
 		@Arg('index', (type) => Int) index: number,
-		@Ctx() { user }: Context
+		@Ctx() { user }: Context,
+		@PubSub('LISTS') publish: Publisher<Board>
 	) {
 		const board = await BoardModel.findById(boardId);
 		if (!board) {
@@ -281,7 +317,11 @@ export class BoardResolver {
 
 		goalList.items.splice(index, 0, task);
 
-		return await board.save();
+		await board.save();
+
+		await publish(board);
+
+		return board;
 	}
 
 	@FieldResolver({ nullable: true })
