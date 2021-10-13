@@ -1,7 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { CurrentUserGQL, User } from 'src/generated/graphql';
 
 @Component({
 	selector: 'app-profile-info',
@@ -14,7 +11,5 @@ export class ProfileInfoComponent implements OnInit {
 
 	constructor() {}
 
-	ngOnInit(): void {
-		
-	}
+	ngOnInit(): void {}
 }
