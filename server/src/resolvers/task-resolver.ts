@@ -18,7 +18,7 @@ import { Board, BoardModel } from '../entities/board';
 import { Team, TeamModel } from '../entities/team';
 import { Context } from '../interfaces/context';
 import { AuthenticationError, UserInputError } from 'apollo-server-errors';
-import { AssignUserInput } from './types/task-input';
+import { AssignUserInput } from './input-models/task-input';
 
 @Resolver((of) => Task)
 export class TaskResolver {

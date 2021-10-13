@@ -140,9 +140,6 @@ const main = async () => {
 			token: authToken,
 		});
 	});
-	app.get('/', (req, res) => {
-		res.status(200).send({ message: 'Received' });
-	});
 
 	await server.start();
 	server.applyMiddleware({ app });

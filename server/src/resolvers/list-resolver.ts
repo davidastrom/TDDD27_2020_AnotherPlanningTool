@@ -12,7 +12,7 @@ import { List } from '../entities/list';
 
 import { Board, BoardModel } from '../entities/board';
 import { Task, TaskModel } from '../entities/task';
-import { TaskInput } from './types/task-input';
+import { TaskInput } from './input-models/task-input';
 import { Context } from '../interfaces/context';
 import {
 	AuthenticationError,

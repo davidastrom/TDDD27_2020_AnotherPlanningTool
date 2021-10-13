@@ -19,12 +19,12 @@ import { ObjectId, ObjectID } from 'mongodb';
 import { ObjectIdScalar } from '../object-id.scalar';
 
 import { Board, BoardModel } from '../entities/board';
-import { BoardInput, BoardListsArgs } from './types/board-input';
+import { BoardInput, BoardListsArgs } from './input-models/board-input';
 
 import { Team, TeamModel } from '../entities/team';
 import { User, UserModel } from '../entities/user';
 import { List, ListModel } from '../entities/list';
-import { ListInput } from './types/list-input';
+import { ListInput } from './input-models/list-input';
 import {
 	AuthenticationError,
 	UserInputError,
