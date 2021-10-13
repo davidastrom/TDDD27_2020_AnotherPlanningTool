@@ -1,4 +1,7 @@
 <nav class="navbar navbar-light bg-light">
-    <a routerLink="" class="navbar-brand mb-0 h1">AnotherPlanningTool</a>
+	<a routerLink="" class="navbar-brand mb-0 h1">AnotherPlanningTool</a>
+	<a *ngIf="signedIn()" class="nav-link" [routerLink]="" (click)="signOut()">
+		Sign out
+	</a>
 </nav>
 <router-outlet></router-outlet>

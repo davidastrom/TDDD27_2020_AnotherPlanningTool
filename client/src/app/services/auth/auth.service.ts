@@ -5,6 +5,8 @@ import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, first, retry, take } from 'rxjs/operators';
 import { TokenService } from '../token/token.service';
+import { Apollo } from 'apollo-angular';
+import { Router } from '@angular/router';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -22,7 +24,9 @@ export class AuthService {
 	constructor(
 		private socialAuthService: SocialAuthService,
 		private http: HttpClient,
-		private tokenService: TokenService
+		private tokenService: TokenService,
+		private apollo: Apollo,
+		private router: Router
 	) {}
 
 	async signInWithGoogle() {
@@ -36,15 +40,16 @@ export class AuthService {
 			.post<SignInInfo>(url, { token: googleUser.idToken }, httpOptions)
 			.pipe(take(1))
 			.subscribe((data) => {
-				console.log(data);
 				this.tokenService.saveToken(data.token);
 				this._signedIn.next(true);
 			});
 	}
 
-	signOut(): void {
+	async signOut(): Promise<void> {
+		await this.apollo.client.resetStore();
 		this.tokenService.clearToken();
 		this._signedIn.next(false);
+		this.router.navigate(['/login']);
 	}
 
 	checkSignInStatus() {

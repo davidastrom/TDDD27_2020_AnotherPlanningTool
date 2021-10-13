@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
 	selector: 'app-root',
@@ -7,5 +9,14 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
 	title = 'client';
-	constructor() {}
+
+	constructor(private authService: AuthService) {}
+
+	signedIn() {
+		return this.authService.getSignedIn();
+	}
+
+	async signOut() {
+		await this.authService.signOut();
+	}
 }
