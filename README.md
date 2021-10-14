@@ -28,13 +28,15 @@ The stack is based on a MEAN-stack, but expanded to use Typescript for backend i
 
 - Angular
   - Apollo Angular - for GraphQL support
+  - Graphql codegen - for syncing queries to backend
+  - Bootstrap - for coherent style elements
 
 ### Back End
 
 - Node.js
   - Express
   - TypeScript - To use strong typing on the backend
-  - **Apollo Server Express - To set up a GraphQL endpoint to query**
+  - Apollo Server Express - To set up a GraphQL endpoint to query
   - GraphQL - To set up GraphQL-server
   - TypeGraphQL - Framework to use GraphQL with Typescript.
   - Mongoose - To handle server-db communication
@@ -51,4 +53,5 @@ The stack is based on a MEAN-stack, but expanded to use Typescript for backend i
 ### Development Tools
 
 - ~~GitLab CI/CD - Syncs pushes to GitHub and handle automatic tests and build on push~~
-- Docker - Runs the application in an isolated environment.
+- ~~Docker - Runs the application in an isolated environment.~~
+- ~~Prettier - For automated code styling~~
