@@ -54,4 +54,4 @@ The stack is based on a MEAN-stack, but expanded to use Typescript for backend i
 
 - ~~GitLab CI/CD - Syncs pushes to GitHub and handle automatic tests and build on push~~
 - ~~Docker - Runs the application in an isolated environment.~~
-- ~~Prettier - For automated code styling~~
+- Prettier - For automated code styling
