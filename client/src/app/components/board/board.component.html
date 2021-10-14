@@ -2,7 +2,7 @@
 	<div class="d-flex col-12 justify-content-between">
 		<h3>{{ (board$ | async)?.board?.name }}</h3>
 		<div ngbDropdown container="body">
-			<button class="btn btn-outline-secondary" ngbDropdownToggle>
+			<button class="btn btn-outline-light" ngbDropdownToggle>
 				Board Members
 			</button>
 			<app-member-list
@@ -65,7 +65,7 @@
 		</div>
 		<button
 			*ngIf="!showAddForm"
-			class="btn btn-secondary btn-block"
+			class="btn btn-light btn-block"
 			(click)="toggleShowAddForm(true)"
 		>
 			<fa-icon [icon]="faPlus"></fa-icon>

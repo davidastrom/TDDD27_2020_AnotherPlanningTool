@@ -1,7 +1,11 @@
 <nav class="navbar navbar-light bg-light">
 	<a routerLink="" class="navbar-brand mb-0 h1">AnotherPlanningTool</a>
-	<a *ngIf="signedIn()" class="nav-link" [routerLink]="" (click)="signOut()">
+	<button
+		*ngIf="signedIn()"
+		class="nav-link btn btn-outline-secondary"
+		(click)="signOut()"
+	>
 		Sign out
-	</a>
+	</button>
 </nav>
 <router-outlet></router-outlet>
