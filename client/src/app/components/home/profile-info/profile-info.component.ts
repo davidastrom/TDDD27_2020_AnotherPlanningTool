@@ -6,10 +6,16 @@ import { Component, Input, OnInit } from '@angular/core';
 	styleUrls: ['./profile-info.component.scss'],
 })
 export class ProfileInfoComponent implements OnInit {
-	@Input()
-	user: any;
+	@Input() user: ProfileInfoUser | undefined;
 
 	constructor() {}
 
 	ngOnInit(): void {}
+}
+
+export class ProfileInfoUser {
+	_id: string;
+	email: string;
+	username: string;
+	picture?: string | null | undefined;
 }

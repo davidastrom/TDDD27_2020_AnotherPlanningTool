@@ -1,25 +1,29 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { faUserMinus } from '@fortawesome/free-solid-svg-icons';
-import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-member-list-item',
-  templateUrl: './member-list-item.component.html',
-  styleUrls: ['./member-list-item.component.scss']
+	selector: 'app-member-list-item',
+	templateUrl: './member-list-item.component.html',
+	styleUrls: ['./member-list-item.component.scss'],
 })
 export class MemberListItemComponent implements OnInit {
-  @Input() item: any;
+	@Input() item: MemberListItem;
 
-  @Output() remove = new EventEmitter<string>();
+	@Output() remove = new EventEmitter<string>();
 
-  faUserMinus = faUserMinus
+	faUserMinus = faUserMinus;
 
-  constructor() { }
+	constructor() {}
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {}
 
-  removeMember() {
-    this.remove.emit(this.item._id)
-  }
+	removeMember() {
+		this.remove.emit(this.item._id);
+	}
+}
+
+export class MemberListItem {
+	_id: string;
+	username: string;
+	picture?: string | null | undefined;
 }

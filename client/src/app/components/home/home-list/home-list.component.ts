@@ -1,38 +1,38 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { HomeListItem } from './home-list-item/home-list-item.component';
 
 @Component({
-  selector: 'app-home-list',
-  templateUrl: './home-list.component.html',
-  styleUrls: ['./home-list.component.scss']
+	selector: 'app-home-list',
+	templateUrl: './home-list.component.html',
+	styleUrls: ['./home-list.component.scss'],
 })
 export class HomeListComponent implements OnInit {
-  @Input() title = ''
-  @Input() list: any[] = []
-  @Input() showMemberCount: boolean;
-  
-  @Output() newItemEvent = new EventEmitter<string>();
+	@Input() title = '';
+	@Input() list: HomeListItem[] = [];
+	@Input() showMemberCount: boolean;
 
-  showAddForm = false;
-  newItemName = '';
+	@Output() newItemEvent = new EventEmitter<string>();
 
-  faPlus = faPlus
+	showAddForm = false;
+	newItemName = '';
 
-  constructor() { }
+	faPlus = faPlus;
 
-  ngOnInit(): void {
-  }
+	constructor() {}
 
-  addItem(): void {
-    this.newItemEvent.emit(this.newItemName);
-    this.toggleShowAddForm(false);
-  }
+	ngOnInit(): void {}
 
-  toggleShowAddForm(show: boolean) {
-    this.showAddForm = show
-  }
+	addItem(): void {
+		this.newItemEvent.emit(this.newItemName);
+		this.toggleShowAddForm(false);
+	}
 
-  getUrl(id: string) {
-    return `/${this.title.toLowerCase()}/${id}`
-  }
+	toggleShowAddForm(show: boolean) {
+		this.showAddForm = show;
+	}
+
+	getUrl(id: string) {
+		return `/${this.title.toLowerCase()}/${id}`;
+	}
 }

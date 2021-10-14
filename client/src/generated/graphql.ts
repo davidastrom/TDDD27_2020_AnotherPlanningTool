@@ -313,7 +313,7 @@ export type GetTeamQueryVariables = Exact<{
 }>;
 
 
-export type GetTeamQuery = { __typename?: 'Query', team: { __typename?: 'Team', name: string, members: Array<{ __typename?: 'User', _id: string, username: string, picture?: string | null | undefined }>, boards: Array<{ __typename?: 'Board', _id: string, name: string }> } };
+export type GetTeamQuery = { __typename?: 'Query', team: { __typename?: 'Team', name: string, members: Array<{ __typename?: 'User', _id: string, username: string, picture?: string | null | undefined }>, boards: Array<{ __typename?: 'Board', _id: string, name: string, members: Array<{ __typename?: 'User', _id: string }> }> } };
 
 export type AddTeamMemberMutationVariables = Exact<{
   userId: Scalars['ObjectId'];
@@ -676,6 +676,9 @@ export const GetTeamDocument = gql`
     boards {
       _id
       name
+      members {
+        _id
+      }
     }
   }
 }

@@ -1,26 +1,29 @@
 query getTeam($id: ObjectId!) {
-    team(teamId: $id) {
-        name
-        members {
-            _id
-            username
-            picture
-        }
-        boards {
-            _id
-            name
-        }
-    }
+	team(teamId: $id) {
+		name
+		members {
+			_id
+			username
+			picture
+		}
+		boards {
+			_id
+			name
+			members {
+				_id
+			}
+		}
+	}
 }
 
 mutation addTeamMember($userId: ObjectId!, $teamId: ObjectId!) {
-    addTeamMember(userId: $userId, teamId: $teamId) {
-        _id
-    }
+	addTeamMember(userId: $userId, teamId: $teamId) {
+		_id
+	}
 }
 
 mutation removeTeamMember($userId: ObjectId!, $teamId: ObjectId!) {
-    removeTeamMember(userId: $userId, teamId: $teamId) {
-        _id
-    }
+	removeTeamMember(userId: $userId, teamId: $teamId) {
+		_id
+	}
 }

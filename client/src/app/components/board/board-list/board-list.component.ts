@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { TaskInput, AssignUserInput } from 'src/generated/graphql';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { BoardListTask } from './board-list-task/board-list-task.component';
 
 @Component({
 	selector: 'app-board-list',
@@ -46,4 +47,10 @@ export class BoardListComponent implements OnInit {
 	toggleShowAddForm(show: boolean) {
 		this.showAddForm = show;
 	}
+}
+
+export class BoardList {
+	_id: string;
+	name: string;
+	items: BoardListTask[];
 }
