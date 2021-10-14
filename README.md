@@ -4,6 +4,16 @@ Project from 2020 course to be finished during 2021 course
 
 A Trello-like planning tool made as a part of the course TDDD27 Advanced Web Programming at Linköping University
 
+## Final Screencast links
+
+### Final project screencast
+
+https://liuonline-my.sharepoint.com/:v:/g/personal/davas593_student_liu_se/Ee2ifoHXXP1BqEI4AvOidOcB-zCeEn8Yte1R4pb90hahSQ?e=ad7qur
+
+### Final code screencast
+
+https://liuonline-my.sharepoint.com/:v:/g/personal/davas593_student_liu_se/EVyqlTJWJEhHrs0xua9gX8EBm1r7RPV7AktMALXKLx6OsQ?e=bnepYx
+
 ## Midterm Screencast link
 
 https://liuonline-my.sharepoint.com/:v:/g/personal/davas593_student_liu_se/EREsbXoOz01Gmn6Vw1xjPMAB6UXAHC5mbcTFd3G3yNEeDg?e=zxEzlb
