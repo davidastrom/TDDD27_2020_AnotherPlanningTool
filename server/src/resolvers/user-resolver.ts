@@ -16,7 +16,7 @@ import { User, UserModel } from '../entities/user';
 import { Team, TeamModel } from '../entities/team';
 import { Board, BoardModel } from '../entities/board';
 import { Context } from '../interfaces/context';
-import { AuthenticationError, UserInputError } from 'apollo-server-errors';
+import { UserInputError } from 'apollo-server-errors';
 
 @Resolver((of) => User)
 export class UserResolver {
@@ -41,15 +41,6 @@ export class UserResolver {
 	async allUsers(): Promise<User[]> {
 		return await UserModel.find();
 	}
-
-	// @Mutation((returns) => User)
-	// async createUser(@Arg('user') userInput: UserInput): Promise<User> {
-	// 	const user = new UserModel({
-	// 		...userInput,
-	// 	} as User);
-	// 	await user.save();
-	// 	return user;
-	// }
 
 	@FieldResolver()
 	async teams(@Root() user: User): Promise<Team[]> {

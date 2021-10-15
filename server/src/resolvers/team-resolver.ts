@@ -42,11 +42,6 @@ export class TeamResolver {
 		return team;
 	}
 
-	// @Query((returns) => [Team])
-	// async allTeams(): Promise<Team[]> {
-	// 	return await TeamModel.find();
-	// }
-
 	@Authorized()
 	@Mutation(() => Team)
 	async createTeam(
